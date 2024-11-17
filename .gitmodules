@@ -1,0 +1,3 @@
+[submodule "external/barelymusician"]
+	path = external/barelymusician
+	url = https://github.com/anokta/barelymusician
