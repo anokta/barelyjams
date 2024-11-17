@@ -1,2 +1,6 @@
-# Auto detect text files and perform LF normalization
 * text=auto
+
+*.cpp text diff=cpp
+*.h text diff=cpp
+
+*.cs text diff=csharp
