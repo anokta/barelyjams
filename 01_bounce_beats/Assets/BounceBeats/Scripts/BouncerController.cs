@@ -52,6 +52,10 @@ public class BouncerController : MonoBehaviour {
       _renderer.material.color =
           Color.Lerp(_noteOffColor, collision.transform.GetComponent<Renderer>().material.color,
                      (float)intensity);
+    } else if (collision.transform.tag == "Wall") {
+      _lastPitch = (_lastPitch == scale.GetPitch(scale.PitchCount))
+                       ? scale.GetPitch(0)
+                       : scale.GetPitch(scale.PitchCount);
     } else {
       _lastPitch = scale.GetPitch(Random.Range(0, scale.PitchCount));
     }
