@@ -1102,9 +1102,15 @@ MonoBehaviour:
   Sustain: 1
   Release: 0.5
   OscillatorShape: 3
-  PulseWidth: 0.7250000238418579
-  SamplePlaybackMode: 0
-  Slices: []
+  PulseWidth: 0.625
+  SamplePlaybackMode: 2
+  Slices:
+  - RootPitch: -24
+    Sample: {fileID: 8300000, guid: 153953c3bb34e8c46bba6fa396224eb9, type: 3}
+  - RootPitch: -12
+    Sample: {fileID: 8300000, guid: bd880f56c5afad74aa09094229d3e923, type: 3}
+  - RootPitch: 0
+    Sample: {fileID: 8300000, guid: a8bc5fd20cfa4944a851c16c0e9de00a, type: 3}
   FilterType: 0
   FilterFrequency: 0
   OnNoteOffEvent:
