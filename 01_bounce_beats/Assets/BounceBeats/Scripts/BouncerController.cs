@@ -1,13 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Barely;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BouncerController : MonoBehaviour {
   public float diveSpeed = 5.0f;
   public float moveSpeed = 5.0f;
+  public float jumpSpeed = 10.0f;
   public float reactionSmoothness = 0.1f;
   public float reactionSmoothnessIdle = 0.01f;
+
+  public Vector3 maxVelocity;
+  public Vector3 minVelocity;
 
   public float sparkleSpeed = 8.0f;
 
@@ -22,6 +28,8 @@ public class BouncerController : MonoBehaviour {
   private Color _noteOffColor = Color.white;
   private Color _targetColor = Color.white;
 
+  private bool canDoubleJump = true;
+
   void Awake() {
     _renderer = GetComponent<Renderer>();
     _rigidBody = GetComponent<Rigidbody>();
@@ -33,15 +41,24 @@ public class BouncerController : MonoBehaviour {
 
     // Move.
     float moveInput = Input.GetAxis("Horizontal");
-    float diveInput = Input.GetAxis("Jump");
+    float jumpInput = Input.GetAxis("Jump");
+    float diveInput = Input.GetAxis("Fire1");
 
     Vector3 targetVelocity =
         new Vector3(moveInput * moveSpeed, _rigidBody.velocity.y - diveInput * diveSpeed,
                     _rigidBody.velocity.z);
-    float smoothness = (Mathf.Abs(moveInput) > 0.1f || Mathf.Abs(diveInput) > 0.1f)
-                           ? reactionSmoothness
-                           : reactionSmoothnessIdle;
-    _rigidBody.velocity = Vector3.Lerp(_rigidBody.velocity, targetVelocity, smoothness);
+    float smoothness =
+        (Mathf.Abs(moveInput) > 0.1f || Mathf.Abs(diveInput) > 0.1f || Mathf.Abs(jumpInput) > 0.1f)
+            ? reactionSmoothness
+            : reactionSmoothnessIdle;
+    _rigidBody.velocity = Vector3.Lerp(
+        _rigidBody.velocity, Vector3.Min(Vector3.Max(targetVelocity, minVelocity), maxVelocity),
+        smoothness);
+    if (canDoubleJump && jumpInput > 0.1f) {
+      _rigidBody.AddForce(Vector3.up * jumpInput * jumpSpeed, ForceMode.VelocityChange);
+      canDoubleJump = false;
+    }
+    _rigidBody.velocity = Vector3.Min(Vector3.Max(_rigidBody.velocity, minVelocity), maxVelocity);
   }
 
   private void OnCollisionEnter(Collision collision) {
@@ -64,7 +81,8 @@ public class BouncerController : MonoBehaviour {
     instrument.SetNoteOff(_lastPitch);
   }
 
-  // private void OnCollisionExit(Collision collision) {
-  //   instrument.SetNoteOff(_lastPitch);
-  // }
+  private void OnCollisionExit(Collision collision) {
+    //   instrument.SetNoteOff(_lastPitch);
+    canDoubleJump = true;
+  }
 }

@@ -1251,8 +1251,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diveSpeed: 12
   moveSpeed: 6
+  jumpSpeed: 5
   reactionSmoothness: 0.008
   reactionSmoothnessIdle: 0.00002
+  maxVelocity: {x: 10, y: 6, z: 0}
+  minVelocity: {x: -10, y: -12, z: 0}
   sparkleSpeed: 4
   instrument: {fileID: 1167333237}
   scale: {fileID: 11400000, guid: 4bb8b90107fcc49458ec519dfa0d0bb8, type: 2}
