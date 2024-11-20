@@ -1,3 +1,5 @@
+using System;
+using Barely;
 using UnityEngine;
 
 public class BouncerController : MonoBehaviour {
@@ -9,6 +11,10 @@ public class BouncerController : MonoBehaviour {
 
   public Vector3 maxVelocity;
   public Vector3 minVelocity;
+
+  public Instrument instrument;
+  // public float minGainDb = -80.0f;
+  // public float maxGainDb = -9.0f;
 
   public float sparkleSpeed = 8.0f;
 
@@ -26,6 +32,10 @@ public class BouncerController : MonoBehaviour {
     _renderer = GetComponent<Renderer>();
     _rigidBody = GetComponent<Rigidbody>();
     _initialPosition = transform.position;
+  }
+
+  private void OnEnable() {
+    instrument.SetNoteOn(0.0);
   }
 
   private void Update() {
@@ -50,36 +60,22 @@ public class BouncerController : MonoBehaviour {
     }
     _rigidBody.velocity = Vector3.Min(Vector3.Max(_rigidBody.velocity, minVelocity), maxVelocity);
 
+    instrument.Source.volume = _rigidBody.velocity.sqrMagnitude / minVelocity.sqrMagnitude;
+
     // Render.
     _renderer.material.color =
         Color.Lerp(_renderer.material.color, _targetColor, sparkleSpeed * Time.deltaTime);
   }
 
   private void OnCollisionEnter(Collision collision) {
-    // double intensity = (double)Mathf.Min(1.0f, 0.1f * collision.relativeVelocity.sqrMagnitude);
-
-    // if (collision.transform.tag == "Plane") {
-    //   _lastPitch =
-    //   scale.GetPitch(collision.transform.GetComponent<PlaneController>().scaleDegree);
-    //   _renderer.material.color =
-    //       Color.Lerp(_noteOffColor, collision.transform.GetComponent<Renderer>().material.color,
-    //                  (float)intensity);
-    // } else if (collision.transform.tag == "Wall") {
-    //   _lastPitch = (_lastPitch == scale.GetPitch(scale.PitchCount))
-    //                    ? scale.GetPitch(0)
-    //                    : scale.GetPitch(scale.PitchCount);
-    // } else {
-    //   _lastPitch = scale.GetPitch(Random.Range(0, scale.PitchCount));
-    // }
-
-    // instrument.SetNoteOn(_lastPitch, intensity);
-    // instrument.SetNoteOff(_lastPitch);
+    instrument.SetNoteOff(0.0);
   }
 
   private void OnCollisionExit(Collision collision) {
     if (collision.collider.tag == "Plane" || collision.collider.tag == "Wall") {
       _canJump = true;
     }
+    instrument.SetNoteOn(0.0);
   }
 
   public void Reset() {

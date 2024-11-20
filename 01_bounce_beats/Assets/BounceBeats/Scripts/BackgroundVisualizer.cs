@@ -16,7 +16,7 @@ public class BackgroundVisualizer : MonoBehaviour {
 
   public float restSpeed = 4.0f;
 
-  private const int BAR_COUNT = 16;
+  private const int BAR_COUNT = 24;
   private const int FFT_SAMPLE_COUNT = 64;
   private const float REST_THRESHOLD = 0.5f;
 
