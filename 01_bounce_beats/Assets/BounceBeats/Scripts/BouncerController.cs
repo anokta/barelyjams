@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Barely;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BouncerController : MonoBehaviour {
@@ -17,28 +12,23 @@ public class BouncerController : MonoBehaviour {
 
   public float sparkleSpeed = 8.0f;
 
-  // TODO: temp
-  public Instrument instrument = null;
-  public Scale scale;
-  private double _lastPitch = 0.0;
-
   private Renderer _renderer = null;
   private Rigidbody _rigidBody = null;
 
   private Color _noteOffColor = Color.white;
   private Color _targetColor = Color.white;
 
-  private bool canDoubleJump = true;
+  private Vector3 _initialPosition = Vector3.zero;
 
-  void Awake() {
+  private bool _canJump = true;
+
+  private void Awake() {
     _renderer = GetComponent<Renderer>();
     _rigidBody = GetComponent<Rigidbody>();
+    _initialPosition = transform.position;
   }
 
-  void Update() {
-    _renderer.material.color =
-        Color.Lerp(_renderer.material.color, _targetColor, sparkleSpeed * Time.deltaTime);
-
+  private void Update() {
     // Move.
     float moveInput = Input.GetAxis("Horizontal");
     float jumpInput = Input.GetAxis("Jump");
@@ -54,35 +44,50 @@ public class BouncerController : MonoBehaviour {
     _rigidBody.velocity = Vector3.Lerp(
         _rigidBody.velocity, Vector3.Min(Vector3.Max(targetVelocity, minVelocity), maxVelocity),
         smoothness);
-    if (canDoubleJump && jumpInput > 0.1f) {
+    if (_canJump && jumpInput > 0.1f) {
       _rigidBody.AddForce(Vector3.up * jumpInput * jumpSpeed, ForceMode.VelocityChange);
-      canDoubleJump = false;
+      _canJump = false;
     }
     _rigidBody.velocity = Vector3.Min(Vector3.Max(_rigidBody.velocity, minVelocity), maxVelocity);
+
+    // Render.
+    _renderer.material.color =
+        Color.Lerp(_renderer.material.color, _targetColor, sparkleSpeed * Time.deltaTime);
   }
 
   private void OnCollisionEnter(Collision collision) {
-    double intensity = (double)Mathf.Min(1.0f, 0.1f * collision.relativeVelocity.sqrMagnitude);
+    // double intensity = (double)Mathf.Min(1.0f, 0.1f * collision.relativeVelocity.sqrMagnitude);
 
-    if (collision.transform.tag == "Plane") {
-      _lastPitch = scale.GetPitch(collision.transform.GetComponent<PlaneController>().scaleDegree);
-      _renderer.material.color =
-          Color.Lerp(_noteOffColor, collision.transform.GetComponent<Renderer>().material.color,
-                     (float)intensity);
-    } else if (collision.transform.tag == "Wall") {
-      _lastPitch = (_lastPitch == scale.GetPitch(scale.PitchCount))
-                       ? scale.GetPitch(0)
-                       : scale.GetPitch(scale.PitchCount);
-    } else {
-      _lastPitch = scale.GetPitch(Random.Range(0, scale.PitchCount));
-    }
+    // if (collision.transform.tag == "Plane") {
+    //   _lastPitch =
+    //   scale.GetPitch(collision.transform.GetComponent<PlaneController>().scaleDegree);
+    //   _renderer.material.color =
+    //       Color.Lerp(_noteOffColor, collision.transform.GetComponent<Renderer>().material.color,
+    //                  (float)intensity);
+    // } else if (collision.transform.tag == "Wall") {
+    //   _lastPitch = (_lastPitch == scale.GetPitch(scale.PitchCount))
+    //                    ? scale.GetPitch(0)
+    //                    : scale.GetPitch(scale.PitchCount);
+    // } else {
+    //   _lastPitch = scale.GetPitch(Random.Range(0, scale.PitchCount));
+    // }
 
-    instrument.SetNoteOn(_lastPitch, intensity);
-    instrument.SetNoteOff(_lastPitch);
+    // instrument.SetNoteOn(_lastPitch, intensity);
+    // instrument.SetNoteOff(_lastPitch);
   }
 
   private void OnCollisionExit(Collision collision) {
-    //   instrument.SetNoteOff(_lastPitch);
-    canDoubleJump = true;
+    if (collision.collider.tag == "Plane" || collision.collider.tag == "Wall") {
+      _canJump = true;
+    }
+  }
+
+  public void Reset() {
+    transform.position = _initialPosition;
+    _rigidBody.velocity = Vector3.zero;
+  }
+
+  public void Sparkle(Color color, float intensity) {
+    _renderer.material.color = Color.Lerp(_noteOffColor, color, intensity);
   }
 }
