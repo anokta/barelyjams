@@ -34,7 +34,7 @@ public class BouncerController : MonoBehaviour {
     _initialPosition = transform.position;
   }
 
-  private void OnEnable() {
+  private void Start() {
     instrument.SetNoteOn(0.0);
   }
 

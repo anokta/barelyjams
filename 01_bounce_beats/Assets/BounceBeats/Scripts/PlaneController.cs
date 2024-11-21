@@ -7,13 +7,12 @@ public class PlaneController : MonoBehaviour {
   public Instrument instrument = null;
   public int scaleDegree = 0;
 
-  void Start() {
+  void Awake() {
     GetComponent<Renderer>().material.color = color;
   }
 
   private void OnCollisionEnter(Collision collision) {
-    if (collision.collider.tag != "Bouncer") {
-      Debug.LogWarning("Unexpected collision with a plane: " + collision);
+    if (!collision.collider.CompareTag("Bouncer")) {
       return;
     }
 

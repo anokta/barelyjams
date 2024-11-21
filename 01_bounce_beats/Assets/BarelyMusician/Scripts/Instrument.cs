@@ -273,6 +273,7 @@ namespace Barely {
       }
       Source.clip.SetData(ones, 0);
       Source.Play();
+      Update();  // TODO: upstream this back to barelymusician
     }
 
     private void OnDisable() {
