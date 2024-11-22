@@ -556,7 +556,7 @@ Transform:
   m_GameObject: {fileID: 659145053}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: 0, z: 0}
+  m_LocalPosition: {x: -6, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 100, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1040,6 +1040,7 @@ MonoBehaviour:
   - {fileID: 8661948051418554648, guid: c182016d39892164ca635b878aec4d72, type: 3}
   - {fileID: 8661948051418554648, guid: c86385f03bda6bb4baa073e471caef26, type: 3}
   - {fileID: 8661948051418554648, guid: c2bb0cb34f48f87458c583ee1c7b93b6, type: 3}
+  - {fileID: 8661948051418554648, guid: 76df57d393d5e44488b654a4dfe866bc, type: 3}
   walls:
   - {fileID: 659145061}
   - {fileID: 1428803942}
@@ -1271,8 +1272,8 @@ MonoBehaviour:
   jumpSpeed: 10
   reactionSmoothness: 0.009
   reactionSmoothnessIdle: 0.00003
-  maxVelocity: {x: 8, y: 5, z: 0}
-  minVelocity: {x: -8, y: -10, z: 0}
+  maxVelocity: {x: 7, y: 5, z: 0}
+  minVelocity: {x: -7, y: -10, z: 0}
   instrument: {fileID: 1167333245}
   sparkleSpeed: 4
 --- !u!114 &1167333245
@@ -1694,7 +1695,7 @@ Transform:
   m_GameObject: {fileID: 1428803937}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
+  m_LocalPosition: {x: 6, y: 0, z: 0}
   m_LocalScale: {x: 4, y: 100, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

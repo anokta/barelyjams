@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
 
     _phrasesParent = new GameObject("Phrases") { hideFlags = HideFlags.DontSave }.transform;
     _phrasesParent.transform.localScale =
-        new Vector3(_phrasesParent.transform.localScale.x * 1.1f,
+        new Vector3(_phrasesParent.transform.localScale.x * 1.2f,
                     _phrasesParent.transform.localScale.y, _phrasesParent.transform.localScale.z);
     _phrases = new Phrase[phrasePrefabs.Length];
     for (int i = 0; i < _phrases.Length; ++i) {
