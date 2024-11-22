@@ -659,7 +659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7524869703580715221, guid: 848d2a35122d3cf439d43ac8736b2219, type: 3}
       propertyPath: scaleDegree
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9121145087473254160, guid: 848d2a35122d3cf439d43ac8736b2219, type: 3}
       propertyPath: m_LocalScale.x
