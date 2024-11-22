@@ -40,7 +40,8 @@ public class BouncerController : MonoBehaviour {
 
   private void Update() {
     // Move.
-    float moveInput = Input.GetAxis("Horizontal");
+    float moveInput =
+        (GameManager.Instance.state == GameState.RUNNING) ? Input.GetAxis("Horizontal") : 0.0f;
     float jumpInput = Input.GetAxis("Jump");
     float diveInput = Input.GetAxis("Fire1");
 

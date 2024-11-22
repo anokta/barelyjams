@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour {
   public BouncerController bouncer;
   public Transform wallsParent;
 
+  public GameObject title;
+
   public Scale scale;
 
   public GameObject[] phrasePrefabs;
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour {
 
   private int _harmonic = 0;
 
+  public GameState state = GameState.OVER;
+
   void Awake() {
     Instance = this;
 
@@ -44,7 +48,7 @@ public class GameManager : MonoBehaviour {
       _phrases[i].Init(bouncer.transform);
       gameObject.SetActive(true);
     }
-    GenerateNewPhrase();
+    // GenerateNewPhrase();
   }
 
   void OnDestroy() {
@@ -52,12 +56,32 @@ public class GameManager : MonoBehaviour {
   }
 
   void Update() {
-    if (Input.GetKeyDown(KeyCode.R)) {
-      bouncer.Reset();
-
-      _positionY = 0.0f;
-      GenerateNewPhrase();
+    if (Input.GetKeyDown(KeyCode.Escape)) {
+      if (state == GameState.RUNNING) {
+        state = GameState.OVER;
+        title.SetActive(true);
+        bouncer.Reset();
+        for (int i = 0; i < _phrases.Length; ++i) {
+          _phrases[i].Init(bouncer.transform);
+        }
+      }
     }
+
+    if (Input.GetKeyDown(KeyCode.Space)) {
+      if (state != GameState.RUNNING) {
+        title.SetActive(false);
+        state = GameState.RUNNING;
+        _positionY = bouncer.transform.position.y - 2.0f * Phrase.PADDING.y;
+        GenerateNewPhrase();
+      }
+    }
+
+    // if (Input.GetKeyDown(KeyCode.R)) {
+    //   bouncer.Reset();
+
+    //   _positionY = 0.0f;
+    //   // GenerateNewPhrase();
+    // }
 
     wallsParent.position =
         new Vector3(wallsParent.position.x, bouncer.transform.position.y, wallsParent.position.z);
@@ -71,8 +95,8 @@ public class GameManager : MonoBehaviour {
     }
     int nextPhraseIndex = Random.Range(0, phrasePrefabs.Length);
     var phrase = _phrases[nextPhraseIndex];
-    phrase.ResetState(_positionY * Vector3.down);
-    _positionY += Phrase.PADDING.y + phrase.boxCollider.size.y;
+    phrase.ResetState(_positionY * Vector3.up);
+    _positionY -= Phrase.PADDING.y + phrase.boxCollider.size.y;
   }
 
   public Color GetColor(int degree) {
