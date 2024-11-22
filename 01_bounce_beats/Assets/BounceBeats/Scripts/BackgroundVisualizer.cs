@@ -45,8 +45,10 @@ public class BackgroundVisualizer : MonoBehaviour {
       barValue =
           Mathf.Lerp(_bars[bar].transform.localScale.y, barValue, Time.deltaTime * restSpeed);
       // }
+      Color targetColor = Color.Lerp(Color.black, peakColor,
+                                     multiplier * (barValue - minHeight) / (maxHeight - minHeight));
       _bars[bar].GetComponent<Renderer>().material.color = Color.Lerp(
-          Color.black, peakColor, multiplier * (barValue - minHeight) / (maxHeight - minHeight));
+          _bars[bar].GetComponent<Renderer>().material.color, targetColor, Time.deltaTime * 4.0f);
 
       _bars[bar].transform.localScale = new Vector3(width, barValue, 1.0f);
       _bars[bar].transform.localPosition =

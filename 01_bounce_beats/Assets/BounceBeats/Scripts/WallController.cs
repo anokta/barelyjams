@@ -24,7 +24,7 @@ public class WallController : MonoBehaviour {
 
     instrument.Source.pitch = Random.Range(0.99f, 1.01f);
     double pitch = GameManager.Instance.GetPitch(0);
-    double intensity = (double)Mathf.Min(1.0f, 0.1f * collision.relativeVelocity.sqrMagnitude);
+    double intensity = (double)Mathf.Min(1.0f, 0.2f * collision.relativeVelocity.sqrMagnitude);
     instrument.SetNoteOn(pitch, intensity);
     instrument.SetNoteOff(pitch);
 

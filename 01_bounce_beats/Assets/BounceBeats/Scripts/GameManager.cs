@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour {
   private Phrase[] _phrases = null;
 
   public WallController[] walls;
+  public BackgroundVisualizer[] visualizers;
+
+  public Color[] scaleColors;
 
   private float _positionY = 0.0f;
 
@@ -61,11 +64,16 @@ public class GameManager : MonoBehaviour {
     _harmonic = Random.Range(0, scale.PitchCount);
     for (int i = 0; i < walls.Length; ++i) {
       walls[i].color = Random.ColorHSV();
+      visualizers[i].peakColor = Color.white - walls[i].color;
     }
     int nextPhraseIndex = Random.Range(0, phrasePrefabs.Length);
     var phrase = _phrases[nextPhraseIndex];
     phrase.ResetState(_positionY * Vector3.down);
     _positionY += phrase.boxCollider.size.y;
+  }
+
+  public Color GetColor(int degree) {
+    return scaleColors[(_harmonic + degree) % scaleColors.Length];
   }
 
   public double GetPitch(int degree) {

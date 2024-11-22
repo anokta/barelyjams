@@ -7,7 +7,8 @@ public class PlaneController : MonoBehaviour {
   public Instrument instrument = null;
   public int scaleDegree = 0;
 
-  void Awake() {
+  void OnEnable() {
+    color = GameManager.Instance.GetColor(scaleDegree);
     GetComponent<Renderer>().material.color = color;
   }
 

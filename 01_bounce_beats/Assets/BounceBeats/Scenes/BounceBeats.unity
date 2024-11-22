@@ -373,11 +373,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5432e5a3713af2a428db1f3ae30e8df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gain: -6
+  Gain: -8
   PitchShift: 0
   Retrigger: 0
   VoiceCount: 8
-  Attack: 0
+  Attack: 0.03999999910593033
   Decay: 0
   Sustain: 1
   Release: 0.25
@@ -387,8 +387,8 @@ MonoBehaviour:
   Slices:
   - RootPitch: 0
     Sample: {fileID: 8300000, guid: d71ff5e58ba151a4eb73d834b38cf79b, type: 3}
-  FilterType: 0
-  FilterFrequency: 1046.5
+  FilterType: 1
+  FilterFrequency: 2093
   OnNoteOffEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -417,7 +417,7 @@ AudioSource:
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
-  Pan2D: -0.5
+  Pan2D: -0.25
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
@@ -814,6 +814,18 @@ MonoBehaviour:
   walls:
   - {fileID: 659145061}
   - {fileID: 1428803942}
+  visualizers:
+  - {fileID: 712342142}
+  - {fileID: 1989645274}
+  scaleColors:
+  - {r: 0.9622642, g: 0.15886435, b: 0.15886435, a: 0}
+  - {r: 0.9607843, g: 0.6063944, b: 0.16078433, a: 0}
+  - {r: 0.80529547, g: 0.9607843, b: 0.16078433, a: 0}
+  - {r: 0.16078433, g: 0.9607843, b: 0.29333228, a: 0}
+  - {r: 0.16078433, g: 0.9607843, b: 0.7271099, a: 0}
+  - {r: 0.16078433, g: 0.5570703, b: 0.9607843, a: 0}
+  - {r: 0.4047983, g: 0.16078433, b: 0.9607843, a: 0}
+  - {r: 0.9607843, g: 0.16078433, b: 0.82905596, a: 0}
 --- !u!114 &933851908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1167,11 +1179,11 @@ AudioChorusFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1167333234}
-  m_Enabled: 0
-  m_DryMix: 0.5
-  m_WetMix1: 0.5
-  m_WetMix2: 0.5
-  m_WetMix3: 0.5
+  m_Enabled: 1
+  m_DryMix: 0.8
+  m_WetMix1: 0.2
+  m_WetMix2: 0
+  m_WetMix3: 0
   m_Delay: 40
   m_Rate: 0.8
   m_Depth: 0.03
@@ -1481,11 +1493,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5432e5a3713af2a428db1f3ae30e8df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gain: -6
+  Gain: -8
   PitchShift: 0
   Retrigger: 0
   VoiceCount: 8
-  Attack: 0
+  Attack: 0.03999999910593033
   Decay: 0
   Sustain: 1
   Release: 0.25
@@ -1495,8 +1507,8 @@ MonoBehaviour:
   Slices:
   - RootPitch: 0
     Sample: {fileID: 8300000, guid: d71ff5e58ba151a4eb73d834b38cf79b, type: 3}
-  FilterType: 0
-  FilterFrequency: 1046.5
+  FilterType: 1
+  FilterFrequency: 2093
   OnNoteOffEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1525,7 +1537,7 @@ AudioSource:
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
-  Pan2D: 0.5
+  Pan2D: 0.25
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
