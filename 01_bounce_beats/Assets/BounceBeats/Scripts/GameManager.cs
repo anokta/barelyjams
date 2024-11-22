@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using Barely;
+using Unity.VisualScripting;
 
 public enum GameState {
   RUNNING,
@@ -21,7 +22,11 @@ public class GameManager : MonoBehaviour {
   private Transform _phrasesParent = null;
   private Phrase[] _phrases = null;
 
+  public WallController[] walls;
+
   private float _positionY = 0.0f;
+
+  private int _harmonic = 0;
 
   void Awake() {
     Instance = this;
@@ -31,7 +36,7 @@ public class GameManager : MonoBehaviour {
     for (int i = 0; i < _phrases.Length; ++i) {
       _phrases[i] = GameObject.Instantiate(phrasePrefabs[i], _phrasesParent).GetComponent<Phrase>();
       _phrases[i].Init(bouncer.transform);
-    gameObject.SetActive(true);
+      gameObject.SetActive(true);
     }
     GenerateNewPhrase();
   }
@@ -52,11 +57,18 @@ public class GameManager : MonoBehaviour {
         new Vector3(wallsParent.position.x, bouncer.transform.position.y, wallsParent.position.z);
   }
 
-  static int index = 0;
   public void GenerateNewPhrase() {
-    int nextPhraseIndex = ++index % phrasePrefabs.Length;  // Random.Range(0, phrasePrefabs.Length);
+    _harmonic = Random.Range(0, scale.PitchCount);
+    for (int i = 0; i < walls.Length; ++i) {
+      walls[i].color = Random.ColorHSV();
+    }
+    int nextPhraseIndex = Random.Range(0, phrasePrefabs.Length);
     var phrase = _phrases[nextPhraseIndex];
     phrase.ResetState(_positionY * Vector3.down);
     _positionY += phrase.boxCollider.size.y;
+  }
+
+  public double GetPitch(int degree) {
+    return scale.GetPitch(_harmonic + degree);
   }
 }

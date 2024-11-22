@@ -1,17 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Barely;
 using UnityEngine;
 
 public class Phrase : MonoBehaviour {
-  // public float width = 1.0f;
-  // public float triggerHeight = 10.0f;
-  // public float destroyHeight = 20.0f;
-
-  // public bool IsPointInside(Vector3 point) {
-  //   return transform.position.y - point.y <= triggerHeight;
-  // }
-
   public BoxCollider boxCollider;
+  public Instrument instrument;
+
+  public PlaneController[] planes;
 
   private Transform _bouncer;
 
@@ -29,6 +25,10 @@ public class Phrase : MonoBehaviour {
     _canDestroy = false;
     transform.localPosition = position;
     gameObject.SetActive(true);
+
+    instrument.SetNoteOn(GameManager.Instance.GetPitch(0));
+    instrument.SetNoteOn(GameManager.Instance.GetPitch(2));
+    instrument.SetNoteOn(GameManager.Instance.GetPitch(4));
   }
 
   private void Update() {
@@ -43,6 +43,7 @@ public class Phrase : MonoBehaviour {
     if (_canDestroy || !collider.CompareTag("Bouncer")) {
       return;
     }
+    instrument.SetAllNotesOff();
     _canDestroy = true;
     GameManager.Instance.GenerateNewPhrase();
   }

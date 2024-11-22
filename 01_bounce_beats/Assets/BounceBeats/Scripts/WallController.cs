@@ -1,14 +1,20 @@
-using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using Barely;
+using UnityEngine;
 
-public class PlaneController : MonoBehaviour {
+public class WallController : MonoBehaviour {
+  public Instrument instrument;
   public Color color = Color.white;
 
-  public Instrument instrument = null;
-  public int scaleDegree = 0;
+  private Renderer _renderer;
 
   void Awake() {
-    GetComponent<Renderer>().material.color = color;
+    _renderer = GetComponent<Renderer>();
+  }
+
+  void Update() {
+    _renderer.material.color = Color.Lerp(_renderer.material.color, color, Time.deltaTime);
   }
 
   private void OnCollisionEnter(Collision collision) {
@@ -16,7 +22,8 @@ public class PlaneController : MonoBehaviour {
       return;
     }
 
-    double pitch = GameManager.Instance.GetPitch(scaleDegree);
+    instrument.Source.pitch = Random.Range(0.99f, 1.01f);
+    double pitch = GameManager.Instance.GetPitch(0);
     double intensity = (double)Mathf.Min(1.0f, 0.1f * collision.relativeVelocity.sqrMagnitude);
     instrument.SetNoteOn(pitch, intensity);
     instrument.SetNoteOff(pitch);
