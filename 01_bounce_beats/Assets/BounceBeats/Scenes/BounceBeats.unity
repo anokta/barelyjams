@@ -268,6 +268,8 @@ GameObject:
   - component: {fileID: 659145059}
   - component: {fileID: 659145058}
   - component: {fileID: 659145061}
+  - component: {fileID: 659145062}
+  - component: {fileID: 659145063}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Wall
@@ -373,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5432e5a3713af2a428db1f3ae30e8df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gain: -8
+  Gain: -7
   PitchShift: 0
   Retrigger: 0
   VoiceCount: 8
@@ -526,6 +528,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instrument: {fileID: 659145058}
   color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!170 &659145062
+AudioDistortionFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659145053}
+  m_Enabled: 0
+  m_DistortionLevel: 0.1
+--- !u!166 &659145063
+AudioChorusFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659145053}
+  m_Enabled: 1
+  m_DryMix: 0.5
+  m_WetMix1: 0.5
+  m_WetMix2: 0.5
+  m_WetMix3: 0.5
+  m_Delay: 40
+  m_Rate: 0.8
+  m_Depth: 0.03
 --- !u!1 &680838041
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,8 +835,9 @@ MonoBehaviour:
   scale: {fileID: 11400000, guid: 4bb8b90107fcc49458ec519dfa0d0bb8, type: 2}
   phrasePrefabs:
   - {fileID: 8661948051418554648, guid: 38a48febb399de04ab4cfc438681a536, type: 3}
-  - {fileID: 8661948051418554648, guid: 38a48febb399de04ab4cfc438681a536, type: 3}
-  - {fileID: 8661948051418554648, guid: 38a48febb399de04ab4cfc438681a536, type: 3}
+  - {fileID: 8661948051418554648, guid: c7d9a9b0158352d4bbe0657531fdf624, type: 3}
+  - {fileID: 8661948051418554648, guid: d0cc20ff20d3bb643ae118705e3628b6, type: 3}
+  - {fileID: 8661948051418554648, guid: c182016d39892164ca635b878aec4d72, type: 3}
   walls:
   - {fileID: 659145061}
   - {fileID: 1428803942}
@@ -1056,7 +1083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5432e5a3713af2a428db1f3ae30e8df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gain: -15
+  Gain: -18
   PitchShift: 0
   Retrigger: 0
   VoiceCount: 4
@@ -1374,6 +1401,8 @@ GameObject:
   - component: {fileID: 1428803942}
   - component: {fileID: 1428803944}
   - component: {fileID: 1428803943}
+  - component: {fileID: 1428803945}
+  - component: {fileID: 1428803946}
   m_Layer: 0
   m_Name: Wall (1)
   m_TagString: Wall
@@ -1493,7 +1522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5432e5a3713af2a428db1f3ae30e8df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gain: -8
+  Gain: -7
   PitchShift: 0
   Retrigger: 0
   VoiceCount: 8
@@ -1611,6 +1640,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!170 &1428803945
+AudioDistortionFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428803937}
+  m_Enabled: 0
+  m_DistortionLevel: 0.1
+--- !u!166 &1428803946
+AudioChorusFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428803937}
+  m_Enabled: 1
+  m_DryMix: 0.5
+  m_WetMix1: 0.5
+  m_WetMix2: 0.5
+  m_WetMix3: 0.5
+  m_Delay: 40
+  m_Rate: 0.8
+  m_Depth: 0.03
 --- !u!4 &1921604127 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9121145087473254160, guid: 848d2a35122d3cf439d43ac8736b2219, type: 3}

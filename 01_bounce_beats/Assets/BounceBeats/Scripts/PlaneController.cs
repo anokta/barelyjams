@@ -8,6 +8,7 @@ public class PlaneController : MonoBehaviour {
   public int scaleDegree = 0;
 
   void OnEnable() {
+    // scaleDegree = Random.Range(0, 8);
     color = GameManager.Instance.GetColor(scaleDegree);
     GetComponent<Renderer>().material.color = color;
   }

@@ -7,15 +7,27 @@ public class Phrase : MonoBehaviour {
   public BoxCollider boxCollider;
   public Instrument instrument;
 
-  public PlaneController[] planes;
-
   private Transform _bouncer;
 
-  private const double Y_PADDING = 2.0f;
+  public static readonly Vector2 PADDING = new Vector2(4.0f, 4.0f);
 
   private bool _canDestroy = false;
+  private PlaneController[] _planes;
+
+  private void Awake() {
+    _planes = GetComponentsInChildren<PlaneController>();
+  }
 
   public void Init(Transform bouncer) {
+    Vector2 size = Vector2.zero;
+    for (int i = 0; i < _planes.Length; ++i) {
+      size.x = Mathf.Max(size.x, 2.0f * Mathf.Abs(_planes[i].transform.localPosition.x));
+      size.y = Mathf.Max(size.y, Mathf.Abs(_planes[i].transform.localPosition.y));
+    }
+    size += PADDING;
+    boxCollider.size = new Vector3(size.x, size.y, 1.0f);
+    boxCollider.center = new Vector3(0.0f, -0.5f * (size.y - PADDING.y), 0.0f);
+
     _bouncer = bouncer;
     _canDestroy = true;
     gameObject.SetActive(false);
@@ -33,7 +45,7 @@ public class Phrase : MonoBehaviour {
 
   private void Update() {
     if (_canDestroy &&
-        transform.position.y - _bouncer.position.y > boxCollider.size.y + Y_PADDING) {
+        transform.position.y - _bouncer.position.y > boxCollider.size.y + PADDING.y) {
       gameObject.SetActive(false);
       return;
     }

@@ -22,7 +22,7 @@ public class WallController : MonoBehaviour {
       return;
     }
 
-    instrument.Source.pitch = Random.Range(0.99f, 1.01f);
+    instrument.Source.pitch = Random.Range(0.995f, 1.005f);
     double pitch = GameManager.Instance.GetPitch(0);
     double intensity = (double)Mathf.Min(1.0f, 0.2f * collision.relativeVelocity.sqrMagnitude);
     instrument.SetNoteOn(pitch, intensity);

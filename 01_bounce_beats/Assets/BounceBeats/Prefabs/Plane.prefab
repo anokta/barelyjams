@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 7524869703580715221}
   - component: {fileID: 5423347081664334232}
   - component: {fileID: 5548541415191382480}
+  - component: {fileID: 8314154406312199960}
+  - component: {fileID: 171239770527222034}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Plane
@@ -238,8 +240,8 @@ MonoBehaviour:
   Attack: 0
   Decay: 0
   Sustain: 1
-  Release: 0.5
-  OscillatorShape: 3
+  Release: 4
+  OscillatorShape: 1
   PulseWidth: 0.625
   SamplePlaybackMode: 2
   Slices:
@@ -257,3 +259,27 @@ MonoBehaviour:
   OnNoteOnEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!170 &8314154406312199960
+AudioDistortionFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6485440935743722879}
+  m_Enabled: 1
+  m_DistortionLevel: 0.1
+--- !u!166 &171239770527222034
+AudioChorusFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6485440935743722879}
+  m_Enabled: 1
+  m_DryMix: 0.5
+  m_WetMix1: 0.5
+  m_WetMix2: 0.5
+  m_WetMix3: 0.5
+  m_Delay: 40
+  m_Rate: 0.8
+  m_Depth: 0.03

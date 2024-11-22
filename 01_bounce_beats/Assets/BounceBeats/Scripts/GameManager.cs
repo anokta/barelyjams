@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour {
     Instance = this;
 
     _phrasesParent = new GameObject("Phrases") { hideFlags = HideFlags.DontSave }.transform;
+    _phrasesParent.transform.localScale =
+        new Vector3(_phrasesParent.transform.localScale.x * 1.1f,
+                    _phrasesParent.transform.localScale.y, _phrasesParent.transform.localScale.z);
     _phrases = new Phrase[phrasePrefabs.Length];
     for (int i = 0; i < _phrases.Length; ++i) {
       _phrases[i] = GameObject.Instantiate(phrasePrefabs[i], _phrasesParent).GetComponent<Phrase>();
@@ -69,7 +72,7 @@ public class GameManager : MonoBehaviour {
     int nextPhraseIndex = Random.Range(0, phrasePrefabs.Length);
     var phrase = _phrases[nextPhraseIndex];
     phrase.ResetState(_positionY * Vector3.down);
-    _positionY += phrase.boxCollider.size.y;
+    _positionY += Phrase.PADDING.y + phrase.boxCollider.size.y;
   }
 
   public Color GetColor(int degree) {
