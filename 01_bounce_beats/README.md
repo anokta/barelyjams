@@ -1,3 +1,5 @@
+![](01_bounce_beats.png)
+
 _from the AI-generated chat..._
 
 ```
