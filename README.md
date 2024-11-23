@@ -1,11 +1,10 @@
 🎵 barelyjams 🎮
 ==============
 
-barelyjams is a collection of bite-sized music-driven games powered by the
-[barelymusician](https://github.com/anokta/barelymusician) engine.
+barelyjams is a collection of bite-sized music-driven games and interactive toys powered by
+[barelymusician](https://github.com/anokta/barelymusician).
 
-Adopting a game-jam format, each entry is a new game prototype developed by exploring creative ways
-to integrate sound and gameplay, showcasing the playfullness of responsive audio.
+Adopting a game-jam format, each entry is a fresh prototype that explores creative ways to interact
+with musical sound, celebrating the playfulness of responsive audio.
 
-Game concepts are generated in collaboration with AI, providing unique ideas and mechanics to
-inspire each project.
+Every entry begins with an AI-generated theme, sparking ideas and mechanics that shape its creation.
