@@ -90,8 +90,9 @@ public class GameManager : MonoBehaviour {
   public void GenerateNewPhrase() {
     _harmonic = Random.Range(0, scale.PitchCount);
     for (int i = 0; i < walls.Length; ++i) {
-      walls[i].color = Random.ColorHSV();
-      visualizers[i].peakColor = Color.white - walls[i].color;
+      Color color = Random.ColorHSV();
+      walls[i].SetColor(color);
+      visualizers[i].peakColor = Color.white - color;
     }
     int nextPhraseIndex = Random.Range(0, phrasePrefabs.Length);
     var phrase = _phrases[nextPhraseIndex];
