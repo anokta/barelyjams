@@ -24,7 +24,7 @@ public class WallController : MonoBehaviour {
     Gradient gradient = new Gradient();
     gradient.SetKeys(new GradientColorKey[] { new GradientColorKey(color, 0.0f),
                                               new GradientColorKey(color, 1.0f) },
-                     new GradientAlphaKey[] { new GradientAlphaKey(0.5f, 0.0f),
+                     new GradientAlphaKey[] { new GradientAlphaKey(0.75f, 0.0f),
                                               new GradientAlphaKey(0.0f, 1.0f) });
     colorOverLifetime.color = new ParticleSystem.MinMaxGradient(gradient);
     _color = color;

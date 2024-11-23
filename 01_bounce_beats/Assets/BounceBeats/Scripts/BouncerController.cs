@@ -1,6 +1,7 @@
 using System;
 using Barely;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class BouncerController : MonoBehaviour {
   public float diveSpeed = 5.0f;
@@ -8,6 +9,9 @@ public class BouncerController : MonoBehaviour {
   public float jumpSpeed = 10.0f;
   public float reactionSmoothness = 0.1f;
   public float reactionSmoothnessIdle = 0.01f;
+
+  public PostProcessProfile postProcessProfile;
+  private Grain _grain;
 
   public Vector3 maxVelocity;
   public Vector3 minVelocity;
@@ -32,6 +36,7 @@ public class BouncerController : MonoBehaviour {
     _renderer = GetComponent<Renderer>();
     _rigidBody = GetComponent<Rigidbody>();
     _initialPosition = transform.position;
+    postProcessProfile.TryGetSettings(out _grain);
   }
 
   private void Start() {
@@ -62,6 +67,8 @@ public class BouncerController : MonoBehaviour {
     _rigidBody.velocity = Vector3.Min(Vector3.Max(_rigidBody.velocity, minVelocity), maxVelocity);
 
     instrument.Source.volume = _rigidBody.velocity.sqrMagnitude / minVelocity.sqrMagnitude;
+
+    _grain.intensity.Override(0.225f + 0.25f * instrument.Source.volume);
 
     // Render.
     _renderer.material.color =

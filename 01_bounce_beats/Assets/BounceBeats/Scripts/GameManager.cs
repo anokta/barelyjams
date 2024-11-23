@@ -2,6 +2,7 @@
 using UnityEngine;
 using Barely;
 using Unity.VisualScripting;
+using UnityEngine.Rendering.PostProcessing;
 
 public enum GameState {
   RUNNING,
@@ -29,14 +30,24 @@ public class GameManager : MonoBehaviour {
 
   public Color[] scaleColors;
 
+  public PostProcessProfile postProcessProfile;
+  private DepthOfField _depthOfField;
+
+  private float _currentAperture = 10.0f;
+  private float _targetAperture = 10.0f;
+
   private float _positionY = 0.0f;
 
   private int _harmonic = 0;
 
   public GameState state = GameState.OVER;
 
+  private bool _firstTime = false;
+
   void Awake() {
     Instance = this;
+
+    postProcessProfile.TryGetSettings(out _depthOfField);
 
     _phrasesParent = new GameObject("Phrases") { hideFlags = HideFlags.DontSave }.transform;
     _phrasesParent.transform.localScale =
@@ -64,6 +75,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < _phrases.Length; ++i) {
           _phrases[i].Init(bouncer.transform);
         }
+        _targetAperture = 10.0f;
       }
     }
 
@@ -72,23 +84,26 @@ public class GameManager : MonoBehaviour {
         title.SetActive(false);
         state = GameState.RUNNING;
         _positionY = bouncer.transform.position.y - 2.0f * Phrase.PADDING.y;
+        _targetAperture = 3.0f;
+        _harmonic = 0;
+        _firstTime = true;
         GenerateNewPhrase();
       }
     }
 
-    // if (Input.GetKeyDown(KeyCode.R)) {
-    //   bouncer.Reset();
-
-    //   _positionY = 0.0f;
-    //   // GenerateNewPhrase();
-    // }
+    _currentAperture = Mathf.Lerp(_currentAperture, _targetAperture, 4.0f * Time.deltaTime);
+    _depthOfField.aperture.Override(_currentAperture);
 
     wallsParent.position =
         new Vector3(wallsParent.position.x, bouncer.transform.position.y, wallsParent.position.z);
   }
 
   public void GenerateNewPhrase() {
-    _harmonic = Random.Range(0, scale.PitchCount);
+    if (_firstTime) {
+      _firstTime = false;
+    } else {
+      _harmonic = Random.Range(0, scale.PitchCount);
+    }
     for (int i = 0; i < walls.Length; ++i) {
       Color color = Random.ColorHSV();
       walls[i].SetColor(color);
