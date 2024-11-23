@@ -76,6 +76,8 @@ public class GameManager : MonoBehaviour {
           _phrases[i].Init(bouncer.transform);
         }
         _targetAperture = 10.0f;
+      } else if (state == GameState.OVER) {
+        Application.Quit();
       }
     }
 
