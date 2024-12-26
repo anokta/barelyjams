@@ -628,8 +628,8 @@ Tilemap:
   - first: {x: -2, y: -1, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 1
       m_TileColorIndex: 1
       m_TileObjectToInstantiateIndex: 65535
@@ -827,15 +827,19 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 10
+  - m_RefCount: 9
     m_Data: {fileID: 11400000, guid: f5e4a7b6b74a5e74b9f9b38b8bd2fefe, type: 2}
   - m_RefCount: 21
     m_Data: {fileID: 11400000, guid: 82699dfb635924a4bacf979557ff18eb, type: 2}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: 319a7b4c0d5830f42ad8f76cd18370c2, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 10
+  - m_RefCount: 9
     m_Data: {fileID: 21300000, guid: 7be6857da98a19846bb5f633114cfd4f, type: 3}
   - m_RefCount: 21
     m_Data: {fileID: 21300000, guid: 9418adfd21525dd41a41bac5b7d48537, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 21300000, guid: 5ef4ac13cd50649479e476cdfb992784, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 6
     m_Data:
@@ -976,6 +980,7 @@ GameObject:
   - component: {fileID: 1611217577}
   - component: {fileID: 1611217576}
   - component: {fileID: 1611217575}
+  - component: {fileID: 1611217578}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -1015,6 +1020,7 @@ MonoBehaviour:
   tilemap: {fileID: 1256053450}
   instrument: {fileID: 1611217575}
   metronome: {fileID: 1107986982}
+  scale: {fileID: 11400000, guid: 9bd30ecfe1f60b847bb814beb4a948dd, type: 2}
 --- !u!212 &1611217574
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1100,9 +1106,9 @@ MonoBehaviour:
   - RootPitch: 0
     Sample: {fileID: 8300000, guid: 4c44596388d688447858af66fd69562f, type: 3}
   - RootPitch: 7
-    Sample: {fileID: 8300000, guid: 4c44596388d688447858af66fd69562f, type: 3}
+    Sample: {fileID: 8300000, guid: 34b9c2e98ceb9cb4e99a33a4935ce883, type: 3}
   - RootPitch: 12
-    Sample: {fileID: 8300000, guid: 4c44596388d688447858af66fd69562f, type: 3}
+    Sample: {fileID: 8300000, guid: e87f57108328eb14283870bdcaeee72b, type: 3}
   FilterType: 0
   FilterFrequency: 0
   OnNoteOffEvent:
@@ -1225,6 +1231,24 @@ MonoBehaviour:
   _loopBeginPosition: 0
   _loopLength: 1
   Tasks: []
+--- !u!114 &1611217578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611217571}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32aa14421d008514cabfe4683b84ab9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instrument: {fileID: 1611217575}
+  arpeggiator: {fileID: 0}
+  repeater: {fileID: 0}
+  octaveOffset: 0
+  noteIntensity: 1
+  repeaterNoteLength: 1
 --- !u!1 &2008097020
 GameObject:
   m_ObjectHideFlags: 0
