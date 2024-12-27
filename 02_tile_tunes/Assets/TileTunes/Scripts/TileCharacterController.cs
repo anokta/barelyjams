@@ -26,6 +26,13 @@ public class TileCharacterController : MonoBehaviour {
   private Dictionary<Vector3Int, int> _scaleDegrees = null;
   private int _currentScaleDegree = 0;
 
+  private enum TileType {
+    Wall = 0,
+    Arrow,
+    InteractableArrow,
+    Goal,
+  }
+
   public void OnBeat(int bar, int beat) {
     // TODO: temp reset
     if (bar == 0 && beat == 0) {
@@ -35,11 +42,13 @@ public class TileCharacterController : MonoBehaviour {
     var cell = tilemap.WorldToCell(_targetPosition);
     // Debug.Log("Current cell = " + cell);
 
+    TileType tileType = GetTileType(cell);
+
     // Interact with the tile.
     var tileTransform = tilemap.GetTransformMatrix(cell);
     if (_hasPressed) {
       _hasPressed = false;
-      if (IsInteractable(cell)) {
+      if (IsInteractable(tileType)) {
         tileTransform *= Matrix4x4.Rotate(Quaternion.Euler(0.0f, 0.0f, 180.0f));
         tilemap.SetTransformMatrix(cell, tileTransform);
       }
@@ -59,8 +68,9 @@ public class TileCharacterController : MonoBehaviour {
 
     characterSprite.color = Color.white;
 
-    // TODO: assuming direction tile
-    _targetPosition += tileTransform.rotation * Vector3.right;
+    if (tileType == TileType.Arrow || tileType == TileType.InteractableArrow) {
+      _targetPosition += tileTransform.rotation * Vector3.right;
+    }
   }
 
   private void OnEnable() {
@@ -73,9 +83,9 @@ public class TileCharacterController : MonoBehaviour {
     // TODO: Change input method and the position threshold.
     if (Input.GetKeyDown(KeyCode.S)) {
       if (Math.Abs(Math.Round(metronome.Position) - metronome.Position) < 0.5) {
-        float pitch = scale.GetPitch(IsInteractable(tilemap.WorldToCell(_targetPosition))
-                                         ? scale.PitchCount
-                                         : -scale.PitchCount);
+        float pitch = scale.GetPitch(
+            IsInteractable(GetTileType(tilemap.WorldToCell(_targetPosition))) ? scale.PitchCount
+                                                                              : -scale.PitchCount);
         instrument.SetNoteOn(pitch);
         instrument.SetNoteOff(pitch);
         _hasPressed = true;
@@ -89,7 +99,19 @@ public class TileCharacterController : MonoBehaviour {
         Color.Lerp(characterSprite.color, new Color(0.0f, 0.0f, 0.0f, 0.0f), Time.deltaTime);
   }
 
-  private bool IsInteractable(Vector3Int cell) {
-    return tilemap.GetTile(cell).name.Contains("interact");
+  private TileType GetTileType(Vector3Int cell) {
+    string name = tilemap.GetTile(cell).name;
+    if (name.Contains("interact")) {
+      return TileType.InteractableArrow;
+    } else if (name.Contains("goal")) {
+      return TileType.Goal;
+    } else if (name.Contains("arrow")) {
+      return TileType.Arrow;
+    }
+    return TileType.Wall;
+  }
+
+  private bool IsInteractable(TileType type) {
+    return type == TileType.InteractableArrow;
   }
 }
