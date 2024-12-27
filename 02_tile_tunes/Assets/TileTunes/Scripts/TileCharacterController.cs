@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Barely;
 using Barely.Examples;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
 public class TileCharacterController : MonoBehaviour {
@@ -71,17 +70,29 @@ public class TileCharacterController : MonoBehaviour {
     if (tileType == TileType.Arrow || tileType == TileType.InteractableArrow) {
       _targetPosition += tileTransform.rotation * Vector3.right;
     }
+
+    if (tileType == TileType.Goal) {
+      GameManager.Instance.FinishLevel();
+      character.position = _initPosition;  // TODO: temp hack to test level restart
+    }
   }
 
   private void OnEnable() {
     _initPosition = character.position;
     _targetPosition = character.position;
     _scaleDegrees = new Dictionary<Vector3Int, int>();
+    _currentScaleDegree = 0;
+
+    metronome.OnBeat += OnBeat;
+  }
+
+  private void OnDisable() {
+    metronome.OnBeat -= OnBeat;
   }
 
   private void Update() {
     // TODO: Change input method and the position threshold.
-    if (Input.GetKeyDown(KeyCode.S)) {
+    if (Input.GetButtonDown("Jump")) {
       if (Math.Abs(Math.Round(metronome.Position) - metronome.Position) < 0.5) {
         float pitch = scale.GetPitch(
             IsInteractable(GetTileType(tilemap.WorldToCell(_targetPosition))) ? scale.PitchCount

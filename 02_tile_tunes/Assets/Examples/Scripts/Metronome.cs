@@ -107,6 +107,7 @@ namespace Barely {
           int bar = _beat / beatCount;
           int beat = _beat % beatCount;
           float pitch = (beat == 0) ? barPitch : beatPitch;
+          _beatEventCallback(bar, beat);
           if (isTicking) {
             instrument.SetNoteOn(pitch, intensity);
             instrument.SetNoteOff(pitch);
@@ -114,7 +115,6 @@ namespace Barely {
           if (isLoggingToConsole) {
             Debug.Log("Tick " + bar + "." + beat);
           }
-          _beatEventCallback(bar, beat);
           ++_beat;
         }, 0.0, ProcessOrder));
       }
