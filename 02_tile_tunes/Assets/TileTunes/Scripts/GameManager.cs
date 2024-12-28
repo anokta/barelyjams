@@ -11,11 +11,11 @@ public enum GameState {
 }
 
 public class GameManager : MonoBehaviour {
-  public GameObject level;
   public GameObject title;
   public GameObject countdown;
 
-  public TileCharacterController character;
+  public LevelController[] levels;
+  private int _currentLevel = 0;
 
   public SpriteRenderer countdownRenderer;
   public Sprite[] countdownSprites;
@@ -42,21 +42,26 @@ public class GameManager : MonoBehaviour {
     } else {
       metronome.isTicking = false;
       countdown.SetActive(false);
-      level.SetActive(true);
-      character.OnBeat(bar, beat);  // TODO: handle the start case better
+      levels[_currentLevel].gameObject.SetActive(true);
+      levels[_currentLevel].character.OnBeat(bar, beat);  // TODO: handle the start case better
 
       state = GameState.RUNNING;
     }
   }
 
   public void FinishLevel() {
-    level.SetActive(false);
+    levels[_currentLevel].gameObject.SetActive(false);
+    _currentLevel = (_currentLevel + 1) % levels.Length;  // TODO: add end screen instead
     metronome.Stop();  // TODO: This should keep ticking during level transitions for off-beat goals
     StartCountdown();
   }
 
   private void Awake() {
     Instance = this;
+    title.SetActive(true);
+    for (int i = 0; i < levels.Length; ++i) {
+      levels[i].gameObject.SetActive(false);
+    }
   }
 
   private void OnEnable() {
@@ -72,7 +77,7 @@ public class GameManager : MonoBehaviour {
       if (state == GameState.RUNNING || state == GameState.COUNTDOWN) {
         state = GameState.OVER;
         metronome.Stop();
-        level.SetActive(false);
+        levels[_currentLevel].gameObject.SetActive(false);
         countdown.SetActive(false);
         title.SetActive(true);
       } else if (state == GameState.OVER) {
