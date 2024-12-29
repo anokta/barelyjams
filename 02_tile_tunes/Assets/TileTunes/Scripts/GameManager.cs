@@ -2,6 +2,7 @@
 using UnityEngine;
 using Barely;
 using Barely.Examples;
+using System;
 
 public enum GameState {
   COUNTDOWN,
@@ -22,6 +23,10 @@ public class GameManager : MonoBehaviour {
 
   public Metronome metronome;
   public Scale scale;
+
+  public double initialTempo = 108.0;
+  public double tempoIncrementAfterGameEnd = 12.0;
+  private const double MaxTempo = 240.0;
 
   public GameState state = GameState.OVER;
 
@@ -51,7 +56,13 @@ public class GameManager : MonoBehaviour {
 
   public void FinishLevel() {
     levels[_currentLevel].gameObject.SetActive(false);
-    _currentLevel = (_currentLevel + 1) % levels.Length;  // TODO: add end screen instead
+
+    ++_currentLevel;
+    if (_currentLevel >= levels.Length) {
+      Musician.Tempo = Math.Min(MaxTempo, Musician.Tempo + tempoIncrementAfterGameEnd);
+      _currentLevel = 0;
+    }
+
     metronome.Stop();  // TODO: This should keep ticking during level transitions for off-beat goals
     StartCountdown();
   }
@@ -65,6 +76,7 @@ public class GameManager : MonoBehaviour {
   }
 
   private void OnEnable() {
+    Musician.Tempo = initialTempo;
     metronome.OnBeat += OnBeat;
   }
 
