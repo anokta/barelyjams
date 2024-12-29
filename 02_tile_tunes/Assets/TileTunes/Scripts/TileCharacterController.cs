@@ -13,8 +13,6 @@ public class TileCharacterController : MonoBehaviour {
   public Instrument instrument;
   public Metronome metronome;
 
-  public Scale scale;
-
   private readonly float POSITION_LERP_SPEED = 8.0f;
   private Vector3 _targetPosition = Vector3.zero;
 
@@ -61,7 +59,7 @@ public class TileCharacterController : MonoBehaviour {
       scaleDegree = _currentScaleDegree++;
       _scaleDegrees.Add(cell, scaleDegree);
     }
-    float pitch = scale.GetPitch(scaleDegree);
+    float pitch = GameManager.Instance.scale.GetPitch(scaleDegree);
     instrument.SetNoteOn(pitch);
     instrument.SetNoteOff(pitch);
 
@@ -94,9 +92,10 @@ public class TileCharacterController : MonoBehaviour {
     // TODO: Change input method and the position threshold.
     if (Input.GetButtonDown("Jump")) {
       if (Math.Abs(Math.Round(metronome.Position) - metronome.Position) < 0.5) {
-        float pitch = scale.GetPitch(
-            IsInteractable(GetTileType(tilemap.WorldToCell(_targetPosition))) ? scale.PitchCount
-                                                                              : -scale.PitchCount);
+        float pitch = GameManager.Instance.scale.GetPitch(
+            IsInteractable(GetTileType(tilemap.WorldToCell(_targetPosition)))
+                ? GameManager.Instance.scale.PitchCount
+                : -GameManager.Instance.scale.PitchCount);
         instrument.SetNoteOn(pitch);
         instrument.SetNoteOff(pitch);
         _hasPressed = true;

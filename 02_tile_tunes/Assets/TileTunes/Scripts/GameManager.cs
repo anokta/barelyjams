@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
 
   public SpriteRenderer countdownRenderer;
   public Sprite[] countdownSprites;
+  public Sprite[] thanksSprites;
 
   public Metronome metronome;
   public Scale scale;
@@ -37,13 +38,16 @@ public class GameManager : MonoBehaviour {
       return;
     }
 
-    if (metronome.beatCount != countdownSprites.Length) {
+    if (metronome.beatCount != countdownSprites.Length ||
+        metronome.beatCount != thanksSprites.Length) {
       Debug.LogError("Invalid beat count for countdown");
       return;
     }
 
     if (bar == 0) {
-      countdownRenderer.sprite = countdownSprites[beat];
+      countdownRenderer.sprite = (_currentLevel == 0 && Musician.Tempo > initialTempo)
+                                     ? thanksSprites[beat]
+                                     : countdownSprites[beat];
     } else {
       metronome.isTicking = false;
       countdown.SetActive(false);
@@ -106,7 +110,9 @@ public class GameManager : MonoBehaviour {
 
   private void StartCountdown() {
     title.SetActive(false);
-    countdownRenderer.sprite = countdownSprites[0];
+    countdownRenderer.sprite = (_currentLevel == 0 && Musician.Tempo > initialTempo)
+                                   ? thanksSprites[0]
+                                   : countdownSprites[0];
     countdown.SetActive(true);
     metronome.isTicking = true;
     metronome.Play();

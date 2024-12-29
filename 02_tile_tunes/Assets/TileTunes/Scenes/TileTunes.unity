@@ -2458,6 +2458,11 @@ MonoBehaviour:
   - {fileID: -2245426086125190547, guid: 37ac4522d67bc784fabdc536bbcd9f4d, type: 3}
   - {fileID: 6177356120095089566, guid: 37ac4522d67bc784fabdc536bbcd9f4d, type: 3}
   - {fileID: -6798805362131501442, guid: 37ac4522d67bc784fabdc536bbcd9f4d, type: 3}
+  thanksSprites:
+  - {fileID: 525359179, guid: 7f98363afc01a7141a2bca505b443801, type: 3}
+  - {fileID: 1702261358, guid: 7f98363afc01a7141a2bca505b443801, type: 3}
+  - {fileID: -1285993217, guid: 7f98363afc01a7141a2bca505b443801, type: 3}
+  - {fileID: -1846512742, guid: 7f98363afc01a7141a2bca505b443801, type: 3}
   metronome: {fileID: 1107986982}
   scale: {fileID: 11400000, guid: 9bd30ecfe1f60b847bb814beb4a948dd, type: 2}
   initialTempo: 108
