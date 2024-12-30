@@ -3,6 +3,8 @@ using UnityEngine;
 using Barely;
 using Barely.Examples;
 using System;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 
 public enum GameState {
   COUNTDOWN,
@@ -17,6 +19,10 @@ public class GameManager : MonoBehaviour {
 
   public LevelController[] levels;
   private int _currentLevel = 0;
+
+  public LevelController CurrentLevel {
+    get { return levels[_currentLevel]; }
+  }
 
   public SpriteRenderer countdownRenderer;
   public Sprite[] countdownSprites;
@@ -33,7 +39,13 @@ public class GameManager : MonoBehaviour {
 
   public static GameManager Instance { get; private set; }
 
+  public event Metronome.BeatEventCallback BeforeOnBeat;
+
   public void OnBeat(int bar, int beat) {
+    if (state == GameState.RUNNING) {
+      BeforeOnBeat?.Invoke(bar, beat);
+    }
+
     if (state != GameState.COUNTDOWN) {
       return;
     }
@@ -52,7 +64,8 @@ public class GameManager : MonoBehaviour {
       metronome.isTicking = false;
       countdown.SetActive(false);
       levels[_currentLevel].gameObject.SetActive(true);
-      levels[_currentLevel].character.OnBeat(bar, beat);  // TODO: handle the start case better
+      metronome.OnBeat += levels[_currentLevel].character.OnBeat;
+      levels[_currentLevel].character.OnBeat(bar, beat);
 
       state = GameState.RUNNING;
     }
@@ -60,6 +73,7 @@ public class GameManager : MonoBehaviour {
 
   public void FinishLevel() {
     levels[_currentLevel].gameObject.SetActive(false);
+    metronome.OnBeat -= levels[_currentLevel].character.OnBeat;
 
     ++_currentLevel;
     if (_currentLevel >= levels.Length) {
@@ -67,13 +81,16 @@ public class GameManager : MonoBehaviour {
       _currentLevel = 0;
     }
 
-    metronome.Stop();  // TODO: This should keep ticking during level transitions for off-beat goals
+    metronome.OnBeat -= OnBeat;
+    metronome.Stop();
+
     StartCountdown();
   }
 
   private void Awake() {
     Instance = this;
     title.SetActive(true);
+    metronome = GetComponent<Metronome>();
     for (int i = 0; i < levels.Length; ++i) {
       levels[i].gameObject.SetActive(false);
     }
@@ -81,17 +98,13 @@ public class GameManager : MonoBehaviour {
 
   private void OnEnable() {
     Musician.Tempo = initialTempo;
-    metronome.OnBeat += OnBeat;
-  }
-
-  private void OnDisable() {
-    metronome.OnBeat += OnBeat;
   }
 
   private void Update() {
     if (Input.GetKeyDown(KeyCode.Escape)) {
       if (state == GameState.RUNNING || state == GameState.COUNTDOWN) {
         state = GameState.OVER;
+        metronome.OnBeat -= OnBeat;
         metronome.Stop();
         levels[_currentLevel].gameObject.SetActive(false);
         countdown.SetActive(false);
@@ -113,6 +126,7 @@ public class GameManager : MonoBehaviour {
     countdownRenderer.sprite = (_currentLevel == 0 && Musician.Tempo > initialTempo)
                                    ? thanksSprites[0]
                                    : countdownSprites[0];
+    metronome.OnBeat += OnBeat;
     countdown.SetActive(true);
     metronome.isTicking = true;
     metronome.Play();

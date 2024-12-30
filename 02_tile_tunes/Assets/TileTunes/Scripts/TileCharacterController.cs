@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Barely;
-using Barely.Examples;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,7 +10,6 @@ public class TileCharacterController : MonoBehaviour {
   public Tilemap tilemap;
 
   public Instrument instrument;
-  public Metronome metronome;
 
   private readonly float POSITION_LERP_SPEED = 8.0f;
   private Vector3 _targetPosition = Vector3.zero;
@@ -31,14 +29,11 @@ public class TileCharacterController : MonoBehaviour {
   }
 
   public void OnBeat(int bar, int beat) {
-    // TODO: temp reset
-    if (bar == 0 && beat == 0) {
-      _targetPosition = _initPosition;
+    if (!gameObject.activeInHierarchy) {
+      return;
     }
 
     var cell = tilemap.WorldToCell(_targetPosition);
-    // Debug.Log("Current cell = " + cell);
-
     TileType tileType = GetTileType(cell);
 
     // Interact with the tile.
@@ -75,23 +70,22 @@ public class TileCharacterController : MonoBehaviour {
     }
   }
 
-  private void OnEnable() {
+  private void Awake() {
     _initPosition = character.position;
-    _targetPosition = character.position;
-    _scaleDegrees = new Dictionary<Vector3Int, int>();
-    _currentScaleDegree = 0;
-
-    metronome.OnBeat += OnBeat;
   }
 
-  private void OnDisable() {
-    metronome.OnBeat -= OnBeat;
+  private void OnEnable() {
+    character.position = _initPosition;
+    _targetPosition = _initPosition;
+    _scaleDegrees = new Dictionary<Vector3Int, int>();
+    _currentScaleDegree = 0;
   }
 
   private void Update() {
     // TODO: Change input method and the position threshold.
     if (Input.GetButtonDown("Jump")) {
-      if (Math.Abs(Math.Round(metronome.Position) - metronome.Position) < 0.5) {
+      if (Math.Abs(Math.Round(GameManager.Instance.metronome.Position) -
+                   GameManager.Instance.metronome.Position) < 0.5) {
         float pitch = GameManager.Instance.scale.GetPitch(
             IsInteractable(GetTileType(tilemap.WorldToCell(_targetPosition)))
                 ? GameManager.Instance.scale.PitchCount
