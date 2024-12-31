@@ -9,17 +9,17 @@ namespace Barely {
       [Range(1, 16)]
       public int beatCount = 4;
 
-      /// Bar note pitch.
-      [Range(-1.0f, 1.0f)]
-      public float barPitch = 1.0f;
+      // /// Bar note pitch.
+      // [Range(-1.0f, 1.0f)]
+      // public float barPitch = 1.0f;
 
-      /// Beat note pitch.
-      [Range(-1.0f, 1.0f)]
-      public float beatPitch = 0.0f;
+      // /// Beat note pitch.
+      // [Range(-1.0f, 1.0f)]
+      // public float beatPitch = 0.0f;
 
-      /// Note intensity.
-      [Range(0.0f, 1.0f)]
-      public float intensity = 1.0f;
+      // /// Note intensity.
+      // [Range(0.0f, 1.0f)]
+      // public float intensity = 1.0f;
 
       /// True if logging to console, false otherwise.
       public bool isLoggingToConsole = false;
@@ -106,10 +106,13 @@ namespace Barely {
         _performer.Tasks.Add(new Task(delegate() {
           int bar = _beat / beatCount;
           int beat = _beat % beatCount;
-          float pitch = (beat == 0) ? barPitch : beatPitch;
+          float pitch =
+              (beat == 0)
+                  ? GameManager.Instance.scale.GetPitch(GameManager.Instance.scale.PitchCount)
+                  : GameManager.Instance.scale.GetPitch(0);
           _beatEventCallback(bar, beat);
           if (isTicking) {
-            instrument.SetNoteOn(pitch, intensity);
+            instrument.SetNoteOn(pitch);
             instrument.SetNoteOff(pitch);
           }
           if (isLoggingToConsole) {
@@ -131,7 +134,7 @@ namespace Barely {
         if (((Application.platform == RuntimePlatform.Android ||
               Application.platform == RuntimePlatform.IPhonePlayer) &&
              Input.GetMouseButtonDown(0)) ||
-            Input.GetKeyDown(KeyCode.Space)) {
+            Input.GetKeyDown(KeyCode.R)) {
           if (_performer.IsPlaying) {
             Pause();
           } else {

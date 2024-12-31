@@ -3,14 +3,12 @@ using UnityEngine;
 using Barely;
 using Barely.Examples;
 using System;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 
 public enum GameState {
+  OVER = 0,
   COUNTDOWN,
   RUNNING,
-  PAUSED,
-  OVER,
+  FINISHED,
 }
 
 public class GameManager : MonoBehaviour {
@@ -46,7 +44,7 @@ public class GameManager : MonoBehaviour {
       BeforeOnBeat?.Invoke(bar, beat);
     }
 
-    if (state != GameState.COUNTDOWN) {
+    if (state != GameState.COUNTDOWN && state != GameState.FINISHED) {
       return;
     }
 
@@ -57,12 +55,20 @@ public class GameManager : MonoBehaviour {
     }
 
     if (bar == 0) {
-      countdownRenderer.sprite = (_currentLevel == 0 && Musician.Tempo > initialTempo)
-                                     ? thanksSprites[beat]
-                                     : countdownSprites[beat];
-    } else {
+      countdownRenderer.sprite =
+          (state == GameState.FINISHED) ? thanksSprites[beat] : countdownSprites[beat];
+    } else if (state == GameState.FINISHED) {
+      state = GameState.OVER;
       metronome.isTicking = false;
+      metronome.OnBeat -= OnBeat;
+      metronome.Stop();
       countdown.SetActive(false);
+      title.SetActive(true);
+
+      Musician.Tempo = Math.Min(MaxTempo, Musician.Tempo + tempoIncrementAfterGameEnd);
+    } else {
+      countdown.SetActive(false);
+      metronome.isTicking = false;
       levels[_currentLevel].gameObject.SetActive(true);
       metronome.OnBeat += levels[_currentLevel].character.OnBeat;
       levels[_currentLevel].character.OnBeat(bar, beat);
@@ -75,15 +81,16 @@ public class GameManager : MonoBehaviour {
     levels[_currentLevel].gameObject.SetActive(false);
     metronome.OnBeat -= levels[_currentLevel].character.OnBeat;
 
-    ++_currentLevel;
-    if (_currentLevel >= levels.Length) {
-      Musician.Tempo = Math.Min(MaxTempo, Musician.Tempo + tempoIncrementAfterGameEnd);
-      _currentLevel = 0;
-    }
-
     metronome.OnBeat -= OnBeat;
     metronome.Stop();
 
+    ++_currentLevel;
+    if (_currentLevel >= levels.Length) {
+      state = GameState.FINISHED;
+      _currentLevel = 0;
+    } else {
+      state = GameState.COUNTDOWN;
+    }
     StartCountdown();
   }
 
@@ -102,20 +109,22 @@ public class GameManager : MonoBehaviour {
 
   private void Update() {
     if (Input.GetKeyDown(KeyCode.Escape)) {
-      if (state == GameState.RUNNING || state == GameState.COUNTDOWN) {
+      if (state != GameState.OVER) {
         state = GameState.OVER;
         metronome.OnBeat -= OnBeat;
         metronome.Stop();
         levels[_currentLevel].gameObject.SetActive(false);
+        metronome.OnBeat -= levels[_currentLevel].character.OnBeat;
         countdown.SetActive(false);
         title.SetActive(true);
-      } else if (state == GameState.OVER) {
+      } else {
         Application.Quit();
       }
     }
 
     if (Input.GetButtonDown("Jump")) {
-      if (state != GameState.RUNNING && state != GameState.COUNTDOWN) {
+      if (state == GameState.OVER) {
+        state = GameState.COUNTDOWN;
         StartCountdown();
       }
     }
@@ -123,13 +132,12 @@ public class GameManager : MonoBehaviour {
 
   private void StartCountdown() {
     title.SetActive(false);
-    countdownRenderer.sprite = (_currentLevel == 0 && Musician.Tempo > initialTempo)
-                                   ? thanksSprites[0]
-                                   : countdownSprites[0];
+    countdownRenderer.sprite =
+        (state == GameState.FINISHED) ? thanksSprites[0] : countdownSprites[0];
+    metronome.Stop();
     metronome.OnBeat += OnBeat;
     countdown.SetActive(true);
     metronome.isTicking = true;
     metronome.Play();
-    state = GameState.COUNTDOWN;
   }
 }
