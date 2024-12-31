@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour {
   }
 
   public void FinishLevel() {
+    levels[_currentLevel].character.ResetMap();
     levels[_currentLevel].gameObject.SetActive(false);
     metronome.OnBeat -= levels[_currentLevel].character.OnBeat;
 
@@ -113,6 +114,7 @@ public class GameManager : MonoBehaviour {
         state = GameState.OVER;
         metronome.OnBeat -= OnBeat;
         metronome.Stop();
+        levels[_currentLevel].character.ResetMap();
         levels[_currentLevel].gameObject.SetActive(false);
         metronome.OnBeat -= levels[_currentLevel].character.OnBeat;
         countdown.SetActive(false);

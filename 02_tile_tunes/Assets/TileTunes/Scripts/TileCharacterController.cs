@@ -28,6 +28,8 @@ public class TileCharacterController : MonoBehaviour {
     Goal,
   }
 
+  private HashSet<Vector3Int> _interactedArrows = null;
+
   public void OnBeat(int bar, int beat) {
     if (!gameObject.activeInHierarchy) {
       return;
@@ -43,6 +45,12 @@ public class TileCharacterController : MonoBehaviour {
       if (IsInteractable(tileType)) {
         tileTransform *= Matrix4x4.Rotate(Quaternion.Euler(0.0f, 0.0f, 180.0f));
         tilemap.SetTransformMatrix(cell, tileTransform);
+
+        if (_interactedArrows.Contains(cell)) {
+          _interactedArrows.Remove(cell);
+        } else {
+          _interactedArrows.Add(cell);
+        }
       }
     }
 
@@ -70,6 +78,14 @@ public class TileCharacterController : MonoBehaviour {
     }
   }
 
+  public void ResetMap() {
+    foreach (var cell in _interactedArrows) {
+      var tileTransform = tilemap.GetTransformMatrix(cell);
+      tileTransform *= Matrix4x4.Rotate(Quaternion.Euler(0.0f, 0.0f, 180.0f));
+      tilemap.SetTransformMatrix(cell, tileTransform);
+    }
+  }
+
   private void Awake() {
     _initPosition = character.position;
   }
@@ -79,6 +95,7 @@ public class TileCharacterController : MonoBehaviour {
     _targetPosition = _initPosition;
     _scaleDegrees = new Dictionary<Vector3Int, int>();
     _currentScaleDegree = 0;
+    _interactedArrows = new HashSet<Vector3Int>();
   }
 
   private void Update() {
