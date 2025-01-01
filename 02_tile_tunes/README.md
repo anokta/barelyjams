@@ -1,3 +1,5 @@
+![](02_tile_tunes.png)
+
 _from the AI-generated chat..._
 
 ```
