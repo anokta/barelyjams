@@ -10,11 +10,15 @@ public struct Move {
 }
 
 public class Automaton : MonoBehaviour {
+  public Transform body;
+
   public Instrument instrument;
   public Performer performer;
-  public Move[] moves;
 
   public float speed = 1.0f;
+  public float hoveringNoiseSpeed = 1.0f;
+
+  public Move[] moves;
 
   private Vector3 _direction = Vector3.forward;
 
@@ -37,5 +41,12 @@ public class Automaton : MonoBehaviour {
 
   void Update() {
     transform.Translate(_direction * Time.deltaTime * speed);
+
+    // Body hovering noise.
+    body.localPosition =
+        Vector3.Lerp(body.localPosition,
+                     new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f),
+                                 Random.Range(-1.0f, 1.0f)),
+                     Time.deltaTime * hoveringNoiseSpeed);
   }
 }
