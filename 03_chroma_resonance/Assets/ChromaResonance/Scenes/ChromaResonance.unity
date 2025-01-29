@@ -488,6 +488,8 @@ MonoBehaviour:
   fork: {fileID: 2079309759}
   performer: {fileID: 647208482}
   forkRotationSpeed: 36
+  clickScale: 0.6
+  clickScaleSpeed: 4
 --- !u!114 &647208482
 MonoBehaviour:
   m_ObjectHideFlags: 0
