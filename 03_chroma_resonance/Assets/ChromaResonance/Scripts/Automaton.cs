@@ -20,7 +20,7 @@ public class Automaton : MonoBehaviour {
 
   public Move[] moves;
 
-  private Vector3 _direction = Vector3.forward;
+  private Vector3 _direction = Vector3.zero;
 
   void Start() {
     performer.Loop = true;
@@ -36,7 +36,6 @@ public class Automaton : MonoBehaviour {
         }
       }));
     }
-    performer.Play();
   }
 
   void Update() {
@@ -48,5 +47,17 @@ public class Automaton : MonoBehaviour {
                      new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f),
                                  Random.Range(-1.0f, 1.0f)),
                      Time.deltaTime * hoveringNoiseSpeed);
+  }
+
+  public void Toggle() {
+    if (performer.IsPlaying) {
+      instrument.SetNoteOn(-2.0f);
+      instrument.SetNoteOff(-2.0f);
+      performer.Stop();
+    } else {
+      instrument.SetNoteOn(-1.0f);
+      instrument.SetNoteOff(-1.0f);
+      performer.Play();
+    }
   }
 }

@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 492714568}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Automaton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -487,6 +487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fork: {fileID: 2079309759}
   performer: {fileID: 647208482}
+  automaton: {fileID: 1502867936}
   forkRotationSpeed: 36
   clickScale: 0.6
   clickScaleSpeed: 4
@@ -762,18 +763,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1502867941}
-  - component: {fileID: 1502867940}
   - component: {fileID: 1502867937}
   - component: {fileID: 1502867936}
   - component: {fileID: 1502867935}
   - component: {fileID: 1502867942}
   m_Layer: 0
   m_Name: Automaton
-  m_TagString: Untagged
+  m_TagString: Automaton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1502867935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,7 +790,7 @@ MonoBehaviour:
   PitchShift: 0
   Retrigger: 0
   VoiceCount: 8
-  Attack: 0.05
+  Attack: 0
   Decay: 0
   Sustain: 1
   Release: 0.25
@@ -804,7 +804,7 @@ MonoBehaviour:
   FilterType: 0
   FilterFrequency: 0
   BitCrusherDepth: 16
-  BitCrusherRate: 1
+  BitCrusherRate: 0.5
   OnNoteOffEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -942,14 +942,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!33 &1502867940
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502867934}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1502867941
 Transform:
   m_ObjectHideFlags: 0

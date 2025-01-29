@@ -1,10 +1,13 @@
 using Barely;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour {
   public Transform fork;
 
   public Performer performer;
+
+  public Automaton automaton;
 
   public float forkRotationSpeed = 1.0f;
 
@@ -42,6 +45,17 @@ public class Player : MonoBehaviour {
 
   void OnClick() {
     fork.localScale = clickScale * Vector3.one;
+
+    // Toggle automaton.
+    Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+    if (Physics.Raycast(ray, out var hitInfo)) {
+      if (hitInfo.collider.tag == "Automaton") {
+        var automaton = hitInfo.transform.parent.GetComponent<Automaton>();
+        if (automaton != null) {
+          automaton.Toggle();
+        }
+      }
+    }
     // for (int i = 0; i < _rendererColors.Length; ++i) {
     //   _renderers[i].material.color = clickColor;
     // }
