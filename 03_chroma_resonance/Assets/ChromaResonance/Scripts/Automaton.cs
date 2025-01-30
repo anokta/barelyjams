@@ -15,6 +15,8 @@ public class Automaton : MonoBehaviour {
   public Instrument instrument;
   public Performer performer;
 
+  public float minAttackDistance = 10.0f;
+
   public float speed = 1.0f;
   public float hoveringNoiseSpeed = 1.0f;
 
@@ -58,6 +60,17 @@ public class Automaton : MonoBehaviour {
                      new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f),
                                  Random.Range(-1.0f, 1.0f)),
                      Time.deltaTime * hoveringNoiseSpeed);
+
+    float playerDistance =
+        Vector3.Distance(transform.position, GameManager.Instance.player.transform.position);
+    if (playerDistance < minAttackDistance) {
+      transform.position = Vector3.Lerp(
+          transform.position, GameManager.Instance.player.transform.position,
+          Time.deltaTime * (minAttackDistance / (playerDistance + 0.5f * minAttackDistance)));
+      instrument.BitCrusherRate = Mathf.Pow(playerDistance / minAttackDistance, 2.0f);
+    } else {
+      instrument.BitCrusherRate = 1.0f;
+    }
   }
 
   public void Toggle() {

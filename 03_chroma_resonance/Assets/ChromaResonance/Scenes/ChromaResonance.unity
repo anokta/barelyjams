@@ -727,13 +727,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00890e6b78a7fc840b3d8e7c73fe7522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diveSpeed: 5
-  moveSpeed: 5
-  jumpSpeed: 10
-  reactionSmoothness: 0.1
-  reactionSmoothnessIdle: 0.01
-  maxVelocity: {x: 0, y: 0, z: 0}
-  minVelocity: {x: 0, y: 0, z: 0}
   instrument: {fileID: 240895058}
   sparkleSpeed: 8
 --- !u!1 &383064555
@@ -1323,6 +1316,7 @@ MonoBehaviour:
   body: {fileID: 492714567}
   instrument: {fileID: 1502867935}
   performer: {fileID: 1502867942}
+  minAttackDistance: 8
   speed: 2
   hoveringNoiseSpeed: 0.2
   moves:
@@ -1399,7 +1393,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.95
       inSlope: 0
       outSlope: 0
       tangentMode: 0
