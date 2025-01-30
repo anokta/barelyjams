@@ -1256,7 +1256,7 @@ GameObject:
   - component: {fileID: 1502867935}
   - component: {fileID: 1502867942}
   m_Layer: 0
-  m_Name: Automaton
+  m_Name: FollowerAutomaton
   m_TagString: Automaton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1291,7 +1291,7 @@ MonoBehaviour:
   Slices:
   - RootPitch: 0
     Sample: {fileID: 8300000, guid: c2241efa7e821ae4ca8d2109286d946f, type: 3}
-  FilterType: 0
+  FilterType: 1
   FilterFrequency: 0
   BitCrusherDepth: 16
   BitCrusherRate: 0.5
@@ -1315,6 +1315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 492714567}
   instrument: {fileID: 1502867935}
+  lowPassDistance: 10
   performer: {fileID: 1502867942}
   minAttackDistance: 8
   speed: 2
@@ -1393,7 +1394,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.95
+      value: 0.9
       inSlope: 0
       outSlope: 0
       tangentMode: 0

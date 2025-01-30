@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 
   public Repeater repeater;
 
-  public Automaton automaton;
+  public FollowerAutomaton automaton;
 
   public float clickScale = 0.8f;
   public float clickScaleSpeed = 1.0f;
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
     Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     if (Physics.Raycast(ray, out var hitInfo)) {
       if (hitInfo.collider.tag == "Automaton") {
-        var automaton = hitInfo.transform.parent.GetComponent<Automaton>();
+        var automaton = hitInfo.transform.parent.GetComponent<FollowerAutomaton>();
         if (automaton != null) {
           automaton.Toggle();
         }

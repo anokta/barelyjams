@@ -9,10 +9,7 @@ public struct Move {
   public Vector3 direction;
 }
 
-public class Automaton : MonoBehaviour {
-  public Transform body;
-
-  public Instrument instrument;
+public class FollowerAutomaton : Automaton {
   public Performer performer;
 
   public float minAttackDistance = 10.0f;
@@ -42,16 +39,18 @@ public class Automaton : MonoBehaviour {
         float pitch = GameManager.Instance.GetPitch(move.degree);
         if (state == TaskState.BEGIN) {
           _direction = move.direction;
-          instrument.SetNoteOn(pitch);
+          _instrument.SetNoteOn(pitch);
         } else if (state == TaskState.END) {
-          instrument.SetNoteOff(pitch);
+          _instrument.SetNoteOff(pitch);
           _direction = Vector3.zero;
         }
       }));
     }
   }
 
-  void Update() {
+  protected override void Update() {
+    base.Update();
+
     transform.Translate(_direction * Time.deltaTime * speed);
 
     // Body hovering noise.
@@ -61,26 +60,24 @@ public class Automaton : MonoBehaviour {
                                  Random.Range(-1.0f, 1.0f)),
                      Time.deltaTime * hoveringNoiseSpeed);
 
-    float playerDistance =
-        Vector3.Distance(transform.position, GameManager.Instance.player.transform.position);
-    if (playerDistance < minAttackDistance) {
+    if (PlayerDistance < minAttackDistance) {
       transform.position = Vector3.Lerp(
           transform.position, GameManager.Instance.player.transform.position,
-          Time.deltaTime * (minAttackDistance / (playerDistance + 0.5f * minAttackDistance)));
-      instrument.BitCrusherRate = Mathf.Pow(playerDistance / minAttackDistance, 2.0f);
+          Time.deltaTime * (minAttackDistance / (PlayerDistance + 0.5f * minAttackDistance)));
+      _instrument.BitCrusherRate = Mathf.Pow(PlayerDistance / minAttackDistance, 2.0f);
     } else {
-      instrument.BitCrusherRate = 1.0f;
+      _instrument.BitCrusherRate = 1.0f;
     }
   }
 
   public void Toggle() {
     float pitch = performer.IsPlaying ? -2.0f : -1.0f;
     if (performer.IsPlaying) {
-      instrument.SetNoteOn(pitch);
-      instrument.SetNoteOff(pitch);
+      _instrument.SetNoteOn(pitch);
+      _instrument.SetNoteOff(pitch);
     } else {
-      instrument.SetNoteOn(pitch);
-      instrument.SetNoteOff(pitch);
+      _instrument.SetNoteOn(pitch);
+      _instrument.SetNoteOff(pitch);
     }
     toggleNextBeat = true;
   }
