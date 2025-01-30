@@ -5,7 +5,7 @@ using UnityEngine;
 public struct Move {
   public double position;
   public double duration;
-  public float pitch;
+  public int degree;
   public Vector3 direction;
 }
 
@@ -22,16 +22,27 @@ public class Automaton : MonoBehaviour {
 
   private Vector3 _direction = Vector3.zero;
 
+  bool toggleNextBeat = false;
+
+  void OnEnable() {
+    GameManager.Instance.Performer.OnBeat += OnBeat;
+  }
+
+  void OnDisable() {
+    GameManager.Instance.Performer.OnBeat -= OnBeat;
+  }
+
   void Start() {
     performer.Loop = true;
     performer.LoopLength = moves[moves.Length - 1].position + moves[moves.Length - 1].duration;
     foreach (var move in moves) {
       performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
+        float pitch = GameManager.Instance.GetPitch(move.degree);
         if (state == TaskState.BEGIN) {
           _direction = move.direction;
-          instrument.SetNoteOn(move.pitch);
+          instrument.SetNoteOn(pitch);
         } else if (state == TaskState.END) {
-          instrument.SetNoteOff(move.pitch);
+          instrument.SetNoteOff(pitch);
           _direction = Vector3.zero;
         }
       }));
@@ -50,14 +61,26 @@ public class Automaton : MonoBehaviour {
   }
 
   public void Toggle() {
+    float pitch = performer.IsPlaying ? -2.0f : -1.0f;
     if (performer.IsPlaying) {
-      instrument.SetNoteOn(-2.0f);
-      instrument.SetNoteOff(-2.0f);
-      performer.Stop();
+      instrument.SetNoteOn(pitch);
+      instrument.SetNoteOff(pitch);
     } else {
-      instrument.SetNoteOn(-1.0f);
-      instrument.SetNoteOff(-1.0f);
-      performer.Play();
+      instrument.SetNoteOn(pitch);
+      instrument.SetNoteOff(pitch);
+    }
+    toggleNextBeat = true;
+  }
+
+  private void OnBeat() {
+    if (toggleNextBeat && GameManager.Instance.Performer.Position == 0.0) {
+      toggleNextBeat = false;
+      if (performer.IsPlaying) {
+        performer.Stop();
+        performer.Position = 0.0;
+      } else {
+        performer.Play();
+      }
     }
   }
 }
