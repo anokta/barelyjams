@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
     Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     if (Physics.Raycast(ray, out var hitInfo)) {
       if (hitInfo.collider.tag == "Automaton") {
-        var automaton = hitInfo.transform.parent.GetComponent<FollowerAutomaton>();
+        var automaton = hitInfo.transform.parent.GetComponent<Automaton>();
         if (automaton != null) {
           automaton.Toggle();
         }

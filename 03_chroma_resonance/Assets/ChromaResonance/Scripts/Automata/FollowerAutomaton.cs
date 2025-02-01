@@ -10,18 +10,15 @@ public struct Move {
 }
 
 public class FollowerAutomaton : Automaton {
-  public Performer performer;
-
   public float minAttackDistance = 10.0f;
 
   public float speed = 1.0f;
-  public float hoveringNoiseSpeed = 1.0f;
 
   public Move[] moves;
 
   private Vector3 _direction = Vector3.zero;
 
-  bool toggleNextBeat = false;
+  private bool _toggleNextBeat = false;
 
   void OnEnable() {
     GameManager.Instance.Performer.OnBeat += OnBeat;
@@ -32,10 +29,10 @@ public class FollowerAutomaton : Automaton {
   }
 
   void Start() {
-    performer.Loop = true;
-    performer.LoopLength = moves[moves.Length - 1].position + moves[moves.Length - 1].duration;
+    _performer.Loop = true;
+    _performer.LoopLength = moves[moves.Length - 1].position + moves[moves.Length - 1].duration;
     foreach (var move in moves) {
-      performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
+      _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
         float pitch = GameManager.Instance.GetPitch(move.degree);
         if (state == TaskState.BEGIN) {
           _direction = move.direction;
@@ -53,13 +50,6 @@ public class FollowerAutomaton : Automaton {
 
     transform.Translate(_direction * Time.deltaTime * speed);
 
-    // Body hovering noise.
-    body.localPosition =
-        Vector3.Lerp(body.localPosition,
-                     new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f),
-                                 Random.Range(-1.0f, 1.0f)),
-                     Time.deltaTime * hoveringNoiseSpeed);
-
     if (PlayerDistance < minAttackDistance) {
       transform.position = Vector3.Lerp(
           transform.position, GameManager.Instance.player.transform.position,
@@ -70,26 +60,26 @@ public class FollowerAutomaton : Automaton {
     }
   }
 
-  public void Toggle() {
-    float pitch = performer.IsPlaying ? -2.0f : -1.0f;
-    if (performer.IsPlaying) {
+  public override void Toggle() {
+    float pitch = _performer.IsPlaying ? -2.0f : -1.0f;
+    if (_performer.IsPlaying) {
       _instrument.SetNoteOn(pitch);
       _instrument.SetNoteOff(pitch);
     } else {
       _instrument.SetNoteOn(pitch);
       _instrument.SetNoteOff(pitch);
     }
-    toggleNextBeat = true;
+    _toggleNextBeat = true;
   }
 
   private void OnBeat() {
-    if (toggleNextBeat && GameManager.Instance.Performer.Position == 0.0) {
-      toggleNextBeat = false;
-      if (performer.IsPlaying) {
-        performer.Stop();
-        performer.Position = 0.0;
+    if (_toggleNextBeat && GameManager.Instance.Performer.Position == 0.0) {
+      _toggleNextBeat = false;
+      if (_performer.IsPlaying) {
+        _performer.Stop();
+        _performer.Position = 0.0;
       } else {
-        performer.Play();
+        _performer.Play();
       }
     }
   }

@@ -31,18 +31,13 @@ public class GameManager : MonoBehaviour {
 
   private void Awake() {
     Instance = this;
+    mainPerformer.OnBeat += delegate() {
+      Debug.Log("Debug Beat Position: " + mainPerformer.Position);
+    };
   }
 
   void Start() {
     player.SetActive(false);
-    mainPerformer.Tasks.Add(new Task(0.0f, 1.0f, delegate(TaskState state) {
-      float pitch = GetPitch(0);
-      if (state == TaskState.BEGIN) {
-        mainInstrument.SetNoteOn(pitch);
-      } else if (state == TaskState.END) {
-        mainInstrument.SetNoteOff(pitch);
-      }
-    }));
   }
 
   void Update() {
