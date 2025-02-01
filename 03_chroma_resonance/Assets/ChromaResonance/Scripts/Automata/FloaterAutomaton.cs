@@ -13,6 +13,14 @@ public class FloaterAutomaton : Automaton {
   private int _degreeOffset = 0;
   private Vector3 _direction = Vector3.zero;
 
+  void OnEnable() {
+    GameManager.Instance.Performer.OnBeat += OnBeat;
+  }
+
+  void OnDisable() {
+    GameManager.Instance.Performer.OnBeat -= OnBeat;
+  }
+
   protected override void Update() {
     base.Update();
 
@@ -31,19 +39,30 @@ public class FloaterAutomaton : Automaton {
 
   public override void Toggle() {
     if (_isPlaying) {
-      _isPlaying = false;
       _instrument.SetAllNotesOff();
+      _isPlaying = false;
       _direction = Vector3.zero;
     } else {
       _isPlaying = true;
       _degreeOffset = Random.Range(-GameManager.Instance.scale.PitchCount / 2,
                                    GameManager.Instance.scale.PitchCount);
-      foreach (int degree in degrees) {
-        float pitch = GameManager.Instance.GetPitch(_degreeOffset + degree);
-        _instrument.SetNoteOn(pitch);
-      }
+      StartPlaying(-1.0f);
+    }
+  }
+
+  private void OnBeat() {
+    if (_isPlaying && _direction == Vector3.zero) {
+      _instrument.SetAllNotesOff();
+      StartPlaying(0.0f);
       _direction =
           new Vector3(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f)).normalized;
+    }
+  }
+
+  private void StartPlaying(float pitchOffset) {
+    foreach (int degree in degrees) {
+      float pitch = pitchOffset + GameManager.Instance.GetPitch(_degreeOffset + degree);
+      _instrument.SetNoteOn(pitch);
     }
   }
 }

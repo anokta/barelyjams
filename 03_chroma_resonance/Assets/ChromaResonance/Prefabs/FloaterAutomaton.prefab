@@ -149,7 +149,7 @@ MonoBehaviour:
   hoveringNoiseSpeed: 1
   lowPassDistance: 8
   degrees: 00000000
-  speed: 1
+  speed: 0.75
   minDetuneDistance: 5
 --- !u!82 &692542971989726989
 AudioSource:

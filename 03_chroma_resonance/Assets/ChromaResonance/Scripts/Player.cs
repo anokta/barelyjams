@@ -13,10 +13,22 @@ public class Player : MonoBehaviour {
   public float clickScale = 0.4f;
   public float clickScaleSpeed = 1.0f;
 
+  private float _playerOriginY = 0.0f;
+  private float _referenceFrequency = 0.0f;
+
+  void Start() {
+    _playerOriginY = transform.position.y;
+    _referenceFrequency = Musician.ReferenceFrequency;
+  }
+
   void Update() {
     if (GameManager.Instance.State == GameState.RUNNING && Input.GetMouseButtonDown(0)) {
       OnClick();
     }
+
+    // TODO: pitch shift could be cool
+    // Musician.ReferenceFrequency =
+    //     _referenceFrequency * (1.0f + _playerOriginY - transform.position.y);
 
     fork.localRotation =
         Quaternion.AngleAxis((float)GameManager.Instance.Position * 90.0f, Vector3.one);

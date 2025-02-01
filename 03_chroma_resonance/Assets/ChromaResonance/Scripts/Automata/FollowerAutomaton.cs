@@ -12,6 +12,7 @@ public struct Move {
 public class FollowerAutomaton : Automaton {
   public float minAttackDistance = 10.0f;
 
+  public int degreeOffset = 0;
   public float speed = 1.0f;
 
   public Move[] moves;
@@ -33,7 +34,7 @@ public class FollowerAutomaton : Automaton {
     _performer.LoopLength = moves[moves.Length - 1].position + moves[moves.Length - 1].duration;
     foreach (var move in moves) {
       _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
-        float pitch = GameManager.Instance.GetPitch(move.degree);
+        float pitch = GameManager.Instance.GetPitch(move.degree + degreeOffset);
         if (state == TaskState.BEGIN) {
           _direction = move.direction;
           _instrument.SetNoteOn(pitch);
@@ -61,7 +62,8 @@ public class FollowerAutomaton : Automaton {
   }
 
   public override void Toggle() {
-    float pitch = _performer.IsPlaying ? -2.0f : -1.0f;
+    float pitch =
+        (_performer.IsPlaying ? -2.0f : -1.0f) + GameManager.Instance.GetPitch(degreeOffset);
     if (_performer.IsPlaying) {
       _instrument.SetNoteOn(pitch);
       _instrument.SetNoteOff(pitch);
