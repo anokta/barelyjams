@@ -9,7 +9,8 @@ public class Player : MonoBehaviour {
 
   public FollowerAutomaton automaton;
 
-  public float clickScale = 0.8f;
+  public float idleScale = 0.5f;
+  public float clickScale = 0.4f;
   public float clickScaleSpeed = 1.0f;
 
   void Update() {
@@ -19,7 +20,8 @@ public class Player : MonoBehaviour {
 
     fork.localRotation =
         Quaternion.AngleAxis((float)GameManager.Instance.Position * 90.0f, Vector3.one);
-    fork.localScale = Vector3.Lerp(fork.localScale, Vector3.one, Time.deltaTime * clickScaleSpeed);
+    fork.localScale =
+        Vector3.Lerp(fork.localScale, idleScale * Vector3.one, Time.deltaTime * clickScaleSpeed);
   }
 
   void OnClick() {

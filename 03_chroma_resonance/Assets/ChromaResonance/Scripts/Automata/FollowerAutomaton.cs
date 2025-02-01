@@ -50,7 +50,7 @@ public class FollowerAutomaton : Automaton {
 
     transform.Translate(_direction * Time.deltaTime * speed);
 
-    if (PlayerDistance < minAttackDistance) {
+    if (_performer.IsPlaying && PlayerDistance < minAttackDistance) {
       transform.position = Vector3.Lerp(
           transform.position, GameManager.Instance.player.transform.position,
           Time.deltaTime * (minAttackDistance / (PlayerDistance + 0.5f * minAttackDistance)));
