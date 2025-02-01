@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class ThumperAutomaton : Automaton {
   public AnimationClip animationClip;
-  public float animationLerpSpeed = 24.0f;
+  public Light spotLight;
 
+  public float animationLerpSpeed = 24.0f;
   public double thumpPosition = 0.0;
 
   private float _animationPosition = 0.0f;
@@ -31,6 +32,7 @@ public class ThumperAutomaton : Automaton {
                            1.0),
                    animationLerpSpeed * Time.deltaTime);
     animationClip.SampleAnimation(gameObject, _animationPosition);
+    spotLight.range /= transform.localScale.x;  // should be uniform scale
   }
 
   public override void Toggle() {

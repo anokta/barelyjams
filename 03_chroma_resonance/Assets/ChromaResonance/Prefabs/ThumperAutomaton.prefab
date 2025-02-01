@@ -258,7 +258,9 @@ MonoBehaviour:
   hoveringNoiseSpeed: 0.1
   lowPassDistance: 10
   animationClip: {fileID: 7400000, guid: 45d3a1d86f4b36d4985644508fb1e73d, type: 2}
+  spotLight: {fileID: 8211553081468191812}
   animationLerpSpeed: 24
+  thumpPosition: 0
 --- !u!82 &2151170914128910370
 AudioSource:
   m_ObjectHideFlags: 0
