@@ -33,6 +33,16 @@ public class ThumperAutomaton : Automaton {
                    animationLerpSpeed * Time.deltaTime);
     animationClip.SampleAnimation(gameObject, _animationPosition);
     spotLight.range /= transform.localScale.x;  // should be uniform scale
+
+    // Crusher.
+    if (_performer.IsPlaying && PlayerDistance < minAttackDistance) {
+      transform.position = Vector3.Lerp(
+          transform.position, GameManager.Instance.player.transform.position,
+          Time.deltaTime * (minAttackDistance / (PlayerDistance + 0.5f * minAttackDistance)));
+      _instrument.BitCrusherRate = Mathf.Pow(PlayerDistance / minAttackDistance, 2.0f);
+    } else {
+      _instrument.BitCrusherRate = 1.0f;
+    }
   }
 
   public override void Toggle() {

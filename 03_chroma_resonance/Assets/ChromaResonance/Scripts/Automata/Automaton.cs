@@ -8,6 +8,7 @@ public abstract class Automaton : MonoBehaviour {
 
   public float hoveringNoiseSpeed = 0.2f;
   public float lowPassDistance = 10.0f;
+  public float minAttackDistance = 10.0f;
 
   public float PlayerDistance { get; private set; }
 

@@ -256,7 +256,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 5122953003763069470}
   hoveringNoiseSpeed: 0.1
-  lowPassDistance: 10
+  lowPassDistance: 6
+  minAttackDistance: 11
   animationClip: {fileID: 7400000, guid: 45d3a1d86f4b36d4985644508fb1e73d, type: 2}
   spotLight: {fileID: 8211553081468191812}
   animationLerpSpeed: 24

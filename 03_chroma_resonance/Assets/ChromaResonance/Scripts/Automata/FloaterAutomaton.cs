@@ -6,8 +6,6 @@ public class FloaterAutomaton : Automaton {
 
   public float speed = 4.0f;
 
-  public float minDetuneDistance = 8.0f;
-
   private bool _isPlaying = false;
 
   private int _degreeOffset = 0;
@@ -30,9 +28,9 @@ public class FloaterAutomaton : Automaton {
       foreach (int degree in degrees) {
         float pitch = GameManager.Instance.GetPitch(_degreeOffset + degree);
         _instrument.SetNoteControl(pitch, NoteControlType.PITCH_SHIFT,
-                                   PlayerDistance > minDetuneDistance
+                                   PlayerDistance > minAttackDistance
                                        ? 0.0f
-                                       : (-1.0f + PlayerDistance / minDetuneDistance));
+                                       : (-1.0f + PlayerDistance / minAttackDistance));
       }
     }
   }

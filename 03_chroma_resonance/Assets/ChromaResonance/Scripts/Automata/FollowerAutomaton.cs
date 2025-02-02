@@ -10,8 +10,6 @@ public struct Move {
 }
 
 public class FollowerAutomaton : Automaton {
-  public float minAttackDistance = 10.0f;
-
   public int degreeOffset = 0;
   public float speed = 1.0f;
 
