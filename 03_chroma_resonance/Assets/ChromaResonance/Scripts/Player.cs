@@ -26,11 +26,11 @@ public class Player : MonoBehaviour {
 
   void Awake() {
     _idleScale = fork.localScale;
-    _instrument = GetComponent<Instrument>();
-    _instrument.Source.volume = idleNoiseVolume;
   }
 
   void Start() {
+    _instrument = GetComponent<Instrument>();
+    _instrument.Source.volume = idleNoiseVolume;
     _instrument.SetNoteOn(0.0f);
   }
 

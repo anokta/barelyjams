@@ -49,11 +49,16 @@ public class FloaterAutomaton : Automaton {
   }
 
   private void OnBeat() {
-    if (_isPlaying && _direction == Vector3.zero) {
-      _instrument.SetAllNotesOff();
-      StartPlaying(0.0f);
-      _direction =
-          new Vector3(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f)).normalized;
+    if (_isPlaying) {
+      if (_direction == Vector3.zero) {
+        _instrument.SetAllNotesOff();
+        StartPlaying(0.0f);
+      }
+      if (GameManager.Instance.Performer.Position == 0.0) {
+        _direction =
+            (_direction + new Vector3(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f)))
+                .normalized;
+      }
     }
   }
 
