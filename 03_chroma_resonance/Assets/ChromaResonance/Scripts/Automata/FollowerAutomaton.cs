@@ -51,7 +51,7 @@ public class FollowerAutomaton : Automaton {
 
     if (_performer.IsPlaying && PlayerDistance < minAttackDistance) {
       transform.position = Vector3.Lerp(
-          transform.position, GameManager.Instance.player.transform.position,
+          transform.position, Camera.main.transform.position,
           Time.deltaTime * (minAttackDistance / (PlayerDistance + 0.5f * minAttackDistance)));
       _instrument.BitCrusherRate = Mathf.Pow(PlayerDistance / minAttackDistance, 2.0f);
     } else {

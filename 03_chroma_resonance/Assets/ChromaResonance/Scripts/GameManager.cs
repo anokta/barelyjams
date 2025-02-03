@@ -10,10 +10,11 @@ public class GameManager : MonoBehaviour {
   public GameObject player;
   public Scale scale;
 
-  public Instrument mainInstrument;
+  // public Instrument mainInstrument;
   public Performer mainPerformer;
 
-  public FloaterThumperController floaterThumper;
+  public Summoner firstSummoner;
+  public Summoner secondSummoner;
   // public FloorAutomaton floorAutomaton;
 
   // Delta performer duration since the last Update call.
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour {
     if (Input.GetKeyDown(KeyCode.Escape)) {
       if (State != GameState.OVER) {
         State = GameState.OVER;
-        // floaterThumper.Stop();
+        // firstSummoner.Stop();
         mainPerformer.Stop();
         mainPerformer.Position = 0.0;
         player.SetActive(false);
@@ -61,7 +62,8 @@ public class GameManager : MonoBehaviour {
         State = GameState.RUNNING;
         player.SetActive(true);
         mainPerformer.Play();
-        floaterThumper.Init();
+        firstSummoner.Init();
+        secondSummoner.Init();
       }
     }
 

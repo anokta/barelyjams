@@ -1,13 +1,11 @@
 using Barely;
 using UnityEngine;
 
-public class FloaterThumperController : MonoBehaviour {
+public class Summoner : MonoBehaviour {
   public FloorAutomaton floor;
-  public FloaterAutomaton floater;
-  public ThumperAutomaton thumper;
+  public Automaton automaton;
 
-  public float floaterHeight = 1.0f;
-
+  public float automatonHeight = 1.0f;
 
   public Performer performer;
 
@@ -15,7 +13,7 @@ public class FloaterThumperController : MonoBehaviour {
     performer.Tasks.Add(new Task(8.0, 0.0, delegate(TaskState state) {
       if (state == TaskState.BEGIN) {
         floor.Stop();
-        floater.Toggle();
+        automaton.Toggle();
       } else if (state == TaskState.END) {
         // TODO: This loops infinitely if `performer.Stop()` is called from `TaskState.BEGIN`.
         performer.Stop();
@@ -25,8 +23,8 @@ public class FloaterThumperController : MonoBehaviour {
 
   void Update() {
     if (performer.IsPlaying) {
-      floater.transform.position =
-          Vector3.up * ((float)(0.25f * floaterHeight * performer.Position) - floaterHeight);
+      automaton.transform.localPosition =
+          Vector3.up * ((float)(0.25f * automatonHeight * performer.Position) - automatonHeight);
     }
   }
 

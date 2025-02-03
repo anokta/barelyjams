@@ -8,7 +8,7 @@ public class Player : MonoBehaviour {
   public FirstPersonController firstPerson;
   public Transform fork;
 
-  public Repeater repeater;
+  // public Repeater repeater;
 
   public FollowerAutomaton automaton;
 
