@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
   public Performer mainPerformer;
 
   public FloorAutomaton menuFloor;
+  public GameObject title;
   public Summoner introSummoner;
 
   // public Summoner firstSummoner;
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour {
       if (mainPerformer.Position % 2 == 0 && _nextState != State) {
         State = _nextState;
         if (State == GameState.RUNNING) {
+          title.SetActive(false);
           player.SetActive(true);
           menuFloor.Stop();
           introSummoner.Init();
@@ -52,8 +54,11 @@ public class GameManager : MonoBehaviour {
           player.SetActive(false);
         }
       }
-      if (State == GameState.OVER && mainPerformer.Position == 2.0) {
-        menuFloor.Play();
+      if (State == GameState.OVER) {
+        title.SetActive(mainPerformer.Position % 2 == 0);
+        if (mainPerformer.Position == 2.0) {
+          menuFloor.Play();
+        }
       }
     };
   }
@@ -72,7 +77,7 @@ public class GameManager : MonoBehaviour {
       }
     }
 
-    if (Input.GetButtonDown("Jump")) {
+    if (Input.GetMouseButtonUp(0)) {
       if (State == GameState.OVER) {
         menuFloor.Stop();  // TODO: Beat callback needs to be triggered before task callbacks.
         _nextState = GameState.RUNNING;
