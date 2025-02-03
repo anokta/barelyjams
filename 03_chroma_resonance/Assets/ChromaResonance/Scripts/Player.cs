@@ -1,9 +1,11 @@
 using Barely;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour {
   public CharacterController character;
+  public FirstPersonController firstPerson;
   public Transform fork;
 
   public Repeater repeater;
@@ -15,6 +17,9 @@ public class Player : MonoBehaviour {
   public float clickScaleSpeed = 1.0f;
   private Vector3 _idleScale = Vector3.one;
 
+  public float idleNoiseVolume = 0.1f;
+  public float noiseSpeed = 4.0f;
+
   public float maxInteractionDistance = 5.0f;
 
   private Instrument _instrument = null;
@@ -22,6 +27,7 @@ public class Player : MonoBehaviour {
   void Awake() {
     _idleScale = fork.localScale;
     _instrument = GetComponent<Instrument>();
+    _instrument.Source.volume = idleNoiseVolume;
   }
 
   void Start() {
@@ -42,7 +48,11 @@ public class Player : MonoBehaviour {
     }
 
     // Movement noise.
-    _instrument.Source.volume = character.velocity.sqrMagnitude;
+    _instrument.Source.volume =
+        Mathf.Lerp(_instrument.Source.volume,
+                   idleNoiseVolume + 0.5f * character.velocity.sqrMagnitude /
+                                         (firstPerson.SprintSpeed * firstPerson.SprintSpeed),
+                   Time.deltaTime * noiseSpeed);
 
     // Fork interaction.
     bool hasAutomatonOnTarget = false;
