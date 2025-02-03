@@ -8,6 +8,7 @@ public enum GameState {
 
 public class GameManager : MonoBehaviour {
   public GameObject player;
+  public GameObject fork;
   public Scale scale;
 
   // public Instrument mainInstrument;
@@ -47,11 +48,13 @@ public class GameManager : MonoBehaviour {
         if (State == GameState.RUNNING) {
           title.SetActive(false);
           player.SetActive(true);
+          fork.SetActive(true);
           menuFloor.Stop();
           introSummoner.Init();
         } else if (State == GameState.OVER) {
           mainPerformer.Position = 0.0;
           player.SetActive(false);
+          fork.SetActive(false);
         }
       }
       if (State == GameState.OVER) {
@@ -66,6 +69,7 @@ public class GameManager : MonoBehaviour {
   void Start() {
     mainPerformer.Play();
     player.SetActive(false);
+    fork.SetActive(false);
   }
 
   void Update() {
