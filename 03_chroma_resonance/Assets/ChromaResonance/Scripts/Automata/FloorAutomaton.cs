@@ -31,10 +31,10 @@ public class FloorAutomaton : Automaton {
   protected override void Update() {
     base.Update();
 
-    if (_performer.IsPlaying) {
+    // if (_performer.IsPlaying) {
       _spotLight.intensity =
           Mathf.Lerp(_spotLight.intensity, _targetIntensity, Time.deltaTime * lightSpeed);
-    }
+    // }
 
     // transform.position =
     //     Vector3.Lerp(transform.position, _origin + Vector3.forward * (_beat * zOffset),

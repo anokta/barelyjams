@@ -13,8 +13,11 @@ public class GameManager : MonoBehaviour {
   // public Instrument mainInstrument;
   public Performer mainPerformer;
 
-  public Summoner firstSummoner;
-  public Summoner secondSummoner;
+  public FloorAutomaton menuFloor;
+  public Summoner introSummoner;
+
+  // public Summoner firstSummoner;
+  // public Summoner secondSummoner;
   // public FloorAutomaton floorAutomaton;
 
   // Delta performer duration since the last Update call.
@@ -26,6 +29,7 @@ public class GameManager : MonoBehaviour {
   }
 
   public GameState State { get; private set; } = GameState.OVER;
+  private GameState _nextState = GameState.OVER;
 
   public static GameManager Instance { get; private set; }
 
@@ -37,21 +41,32 @@ public class GameManager : MonoBehaviour {
     Instance = this;
     mainPerformer.OnBeat += delegate() {
       Debug.Log("Debug Beat Position: " + mainPerformer.Position);
+      if (mainPerformer.Position % 2 == 0 && _nextState != State) {
+        State = _nextState;
+        if (State == GameState.RUNNING) {
+          player.SetActive(true);
+          menuFloor.Stop();
+          introSummoner.Init();
+        } else if (State == GameState.OVER) {
+          mainPerformer.Position = 0.0;
+          player.SetActive(false);
+        }
+      }
+      if (State == GameState.OVER && mainPerformer.Position == 2.0) {
+        menuFloor.Play();
+      }
     };
   }
 
   void Start() {
+    mainPerformer.Play();
     player.SetActive(false);
   }
 
   void Update() {
     if (Input.GetKeyDown(KeyCode.Escape)) {
       if (State != GameState.OVER) {
-        State = GameState.OVER;
-        // firstSummoner.Stop();
-        mainPerformer.Stop();
-        mainPerformer.Position = 0.0;
-        player.SetActive(false);
+        _nextState = GameState.OVER;
       } else {
         Application.Quit();
       }
@@ -59,11 +74,8 @@ public class GameManager : MonoBehaviour {
 
     if (Input.GetButtonDown("Jump")) {
       if (State == GameState.OVER) {
-        State = GameState.RUNNING;
-        player.SetActive(true);
-        mainPerformer.Play();
-        firstSummoner.Init();
-        secondSummoner.Init();
+        menuFloor.Stop();  // TODO: Beat callback needs to be triggered before task callbacks.
+        _nextState = GameState.RUNNING;
       }
     }
 
