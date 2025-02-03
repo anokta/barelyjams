@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4280475017162343036}
   - component: {fileID: 2936481839009675356}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 692542971989726989}
   - component: {fileID: 4811353180617314582}
   - component: {fileID: 654130714396197435}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FloaterAutomaton
   m_TagString: Automaton
   m_Icon: {fileID: 0}
@@ -148,9 +148,9 @@ MonoBehaviour:
   body: {fileID: 8784014986530820554}
   hoveringNoiseSpeed: 1
   lowPassDistance: 8
+  minAttackDistance: 10
   degrees: 00000000
   speed: 0.75
-  minDetuneDistance: 5
 --- !u!82 &692542971989726989
 AudioSource:
   m_ObjectHideFlags: 0
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 8387813716974963828}
   - component: {fileID: 6012286273873009636}
   - component: {fileID: 3640793144130144923}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body
   m_TagString: Automaton
   m_Icon: {fileID: 0}

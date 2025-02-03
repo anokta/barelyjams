@@ -2,34 +2,39 @@ using Barely;
 using UnityEngine;
 
 public class FloorAutomaton : Automaton {
-  public int beatCount = 4;
   public double duration = 1.0;
 
-  // public float teleportSpeed = 4.0f;
-  // public float zOffset = 1.0f;
+  public float lightIntensity = 1000.0f;
+  public float lightSpeed = 16.0f;
 
-  // private Vector3 _origin = Vector3.zero;
-  // private int _beat = 0;
+  private Light _spotLight;
+  private float _targetIntensity = 0.0f;
 
   void Start() {
+    _spotLight = body.GetComponent<Light>();
     // _origin = transform.position;
     _performer.Tasks.Add(new Task(0.0, duration, delegate(TaskState state) {
       if (state == TaskState.BEGIN) {
-        // transform.position = _origin + Vector3.forward * (_beat * zOffset);
         _instrument.SetNoteOn(0.0f);
         _instrument.SetNoteControl(0.0f, NoteControlType.PITCH_SHIFT,
                                    Random.Range(-0.001f, 0.001f));
-        body.gameObject.SetActive(true);
-        // _beat = (_beat + 1) % beatCount;
+        _targetIntensity = lightIntensity;
+        // body.gameObject.SetActive(true);
       } else if (state == TaskState.END) {
         _instrument.SetNoteOff(0.0f);
-        body.gameObject.SetActive(false);
+        _targetIntensity = 0.0f;
+        // body.gameObject.SetActive(false);
       }
     }));
   }
 
   protected override void Update() {
     base.Update();
+
+    if (_performer.IsPlaying) {
+      _spotLight.intensity =
+          Mathf.Lerp(_spotLight.intensity, _targetIntensity, Time.deltaTime * lightSpeed);
+    }
 
     // transform.position =
     //     Vector3.Lerp(transform.position, _origin + Vector3.forward * (_beat * zOffset),

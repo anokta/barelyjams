@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8133092987023549528}
   - component: {fileID: 8504878060149739224}
   - component: {fileID: 8431017024471414540}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body
   m_TagString: Automaton
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 6574531503050683916}
   - component: {fileID: 1511513412020125429}
   - component: {fileID: 4087767921915894181}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FollowerAutomaton
   m_TagString: Automaton
   m_Icon: {fileID: 0}
@@ -161,6 +161,7 @@ MonoBehaviour:
   hoveringNoiseSpeed: 0.2
   lowPassDistance: 10
   minAttackDistance: 8
+  degreeOffset: 0
   speed: 2
   moves:
   - position: 0
@@ -345,7 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5787027029979242686}
   - component: {fileID: 3267158067236819375}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}

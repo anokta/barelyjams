@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1622657798140557999}
   - component: {fileID: 1632536164024692661}
   - component: {fileID: 7721997591440391725}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body
   m_TagString: Automaton
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1647947131595256655}
   - component: {fileID: 8211553081468191812}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 2151170914128910370}
   - component: {fileID: 2985276437690301972}
   - component: {fileID: 3908985514229354544}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Thumper
   m_TagString: Automaton
   m_Icon: {fileID: 0}
@@ -427,7 +427,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7944080318876399423}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ThumperAutomaton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
