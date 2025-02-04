@@ -3,17 +3,18 @@ using UnityEngine;
 
 public class Summoner : MonoBehaviour {
   public FloorAutomaton floor;
-  public Automaton automaton;
+  public Automaton2 automaton;
 
   public float automatonHeight = 1.0f;
 
   public Performer performer;
 
   void Start() {
-    performer.Tasks.Add(new Task(8.0, 0.0, delegate(TaskState state) {
+    // TODO: Make sure this happens before other performer calls.
+    performer.Tasks.Add(new Task(7.9999, 0.0, delegate(TaskState state) {
       if (state == TaskState.BEGIN) {
         floor.Stop();
-        automaton.Toggle();
+        automaton.Play();
       } else if (state == TaskState.END) {
         // TODO: This loops infinitely if `performer.Stop()` is called from `TaskState.BEGIN`.
         performer.Stop();

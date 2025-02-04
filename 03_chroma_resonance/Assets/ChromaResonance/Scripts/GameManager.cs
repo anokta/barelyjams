@@ -11,20 +11,11 @@ public class GameManager : MonoBehaviour {
   public GameObject fork;
   public Scale scale;
 
-  // public Instrument mainInstrument;
   public Performer mainPerformer;
 
   public FloorAutomaton menuFloor;
   public GameObject title;
   public Summoner introSummoner;
-
-  // public Summoner firstSummoner;
-  // public Summoner secondSummoner;
-  // public FloorAutomaton floorAutomaton;
-
-  // Delta performer duration since the last Update call.
-  public double DeltaDuration { get; private set; } = 0.0;
-  public double Position { get; private set; } = 0.0;
 
   public Performer Performer {
     get { return mainPerformer; }
@@ -87,12 +78,5 @@ public class GameManager : MonoBehaviour {
         _nextState = GameState.RUNNING;
       }
     }
-
-    // Update delta duration.
-    DeltaDuration = mainPerformer.Position - Position;
-    if (DeltaDuration < 0.0) {
-      DeltaDuration += mainPerformer.LoopLength;
-    }
-    Position = mainPerformer.Position;
   }
 }

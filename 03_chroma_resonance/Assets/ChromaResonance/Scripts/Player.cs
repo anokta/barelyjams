@@ -8,8 +8,6 @@ public class Player : MonoBehaviour {
   public FirstPersonController firstPerson;
   public Transform fork;
 
-  // public Repeater repeater;
-
   public FollowerAutomaton automaton;
 
   public float clickScale = 0.8f;
@@ -33,14 +31,6 @@ public class Player : MonoBehaviour {
     _instrument.Source.volume = idleNoiseVolume;
     _instrument.SetNoteOn(0.0f);
   }
-
-  // private float _playerOriginY = 0.0f;
-  // private float _referenceFrequency = 0.0f;
-
-  // void Start() {
-  //   _playerOriginY = transform.position.y;
-  //   _referenceFrequency = Musician.ReferenceFrequency;
-  // }
 
   void Update() {
     if (GameManager.Instance.State != GameState.RUNNING) {
@@ -70,7 +60,7 @@ public class Player : MonoBehaviour {
     }
 
     fork.localRotation =
-        Quaternion.AngleAxis((float)GameManager.Instance.Position * 90.0f, Vector3.one);
+        Quaternion.AngleAxis((float)GameManager.Instance.Performer.Position * 90.0f, Vector3.one);
     fork.localScale = Vector3.Lerp(fork.localScale, scale, Time.deltaTime * clickScaleSpeed);
   }
 

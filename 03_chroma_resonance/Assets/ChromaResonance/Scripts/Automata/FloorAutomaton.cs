@@ -12,33 +12,23 @@ public class FloorAutomaton : Automaton {
 
   void Start() {
     _spotLight = body.GetComponent<Light>();
-    // _origin = transform.position;
     _performer.Tasks.Add(new Task(0.0, duration, delegate(TaskState state) {
       if (state == TaskState.BEGIN) {
         _instrument.SetNoteOn(0.0f);
         _instrument.SetNoteControl(0.0f, NoteControlType.PITCH_SHIFT,
                                    Random.Range(-0.001f, 0.001f));
         _targetIntensity = lightIntensity;
-        // body.gameObject.SetActive(true);
       } else if (state == TaskState.END) {
         _instrument.SetNoteOff(0.0f);
         _targetIntensity = 0.0f;
-        // body.gameObject.SetActive(false);
       }
     }));
   }
 
   protected override void Update() {
     base.Update();
-
-    // if (_performer.IsPlaying) {
-      _spotLight.intensity =
-          Mathf.Lerp(_spotLight.intensity, _targetIntensity, Time.deltaTime * lightSpeed);
-    // }
-
-    // transform.position =
-    //     Vector3.Lerp(transform.position, _origin + Vector3.forward * (_beat * zOffset),
-    //                  Time.deltaTime * teleportSpeed);
+    _spotLight.intensity =
+        Mathf.Lerp(_spotLight.intensity, _targetIntensity, Time.deltaTime * lightSpeed);
   }
 
   public void Play() {
