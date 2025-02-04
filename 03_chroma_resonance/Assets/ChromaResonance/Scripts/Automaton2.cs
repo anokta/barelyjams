@@ -63,14 +63,6 @@ public class Automaton2 : MonoBehaviour {
     SetState(State.FLOATER, floaterProps);
   }
 
-  // void OnEnable() {
-  //   GameManager.Instance.Performer.OnBeat += OnBeat;
-  // }
-
-  // void OnDisable() {
-  //   GameManager.Instance.Performer.OnBeat -= OnBeat;
-  // }
-
   void Start() {
     for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
       _performer.Tasks.Add(new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {

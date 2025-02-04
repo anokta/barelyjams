@@ -9,17 +9,12 @@ public class Summoner : MonoBehaviour {
 
   public Performer performer;
 
-  void Start() {
-    // TODO: Make sure this happens before other performer calls.
-    performer.Tasks.Add(new Task(7.9999, 0.0, delegate(TaskState state) {
-      if (state == TaskState.BEGIN) {
-        floor.Stop();
-        automaton.Play();
-      } else if (state == TaskState.END) {
-        // TODO: This loops infinitely if `performer.Stop()` is called from `TaskState.BEGIN`.
-        performer.Stop();
-      }
-    }));
+  void OnEnable() {
+    performer.OnBeat += OnBeat;
+  }
+
+  void OnDisable() {
+    performer.OnBeat -= OnBeat;
   }
 
   void Update() {
@@ -33,5 +28,13 @@ public class Summoner : MonoBehaviour {
     performer.Position = 0.0;
     performer.Play();
     floor.Play();
+  }
+
+  private void OnBeat() {
+    if (performer.Position == 8.0) {
+      floor.Stop();
+      automaton.Play();
+      performer.Stop();
+    }
   }
 }

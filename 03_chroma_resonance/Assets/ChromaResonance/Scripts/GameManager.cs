@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour {
   private void Awake() {
     Instance = this;
     mainPerformer.OnBeat += delegate() {
-      Debug.Log("Debug Beat Position: " + mainPerformer.Position);
+      // Debug.Log("Debug Beat Position: " + mainPerformer.Position);
       if (mainPerformer.Position % 2 == 0 && _nextState != State) {
         State = _nextState;
         if (State == GameState.RUNNING) {
@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviour {
 
     if (Input.GetMouseButtonUp(0)) {
       if (State == GameState.OVER) {
-        menuFloor.Stop();  // TODO: Beat callback needs to be triggered before task callbacks.
         _nextState = GameState.RUNNING;
       }
     }

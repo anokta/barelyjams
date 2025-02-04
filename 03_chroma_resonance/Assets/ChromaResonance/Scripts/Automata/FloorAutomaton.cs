@@ -10,6 +10,10 @@ public class FloorAutomaton : Automaton {
   private Light _spotLight;
   private float _targetIntensity = 0.0f;
 
+  public double Pos {
+    get { return _performer.Position; }
+  }
+
   void Start() {
     _spotLight = body.GetComponent<Light>();
     _performer.Tasks.Add(new Task(0.0, duration, delegate(TaskState state) {
