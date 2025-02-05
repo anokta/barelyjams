@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Barely;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour {
 
   public FloorAutomaton menuFloor;
   public GameObject title;
+
   public Summoner introSummoner;
 
   public Performer Performer {
@@ -30,35 +32,54 @@ public class GameManager : MonoBehaviour {
     return scale.GetPitch(degree);
   }
 
+  private List<Summoner> _activeSummoners;
+  private Vector3 _playerOrigin;
+
   private void Awake() {
     Instance = this;
+
+    _activeSummoners = new List<Summoner>();
+    _playerOrigin = player.transform.localPosition;
+
     mainPerformer.OnBeat += delegate() {
       // Debug.Log("Debug Beat Position: " + mainPerformer.Position);
       if (mainPerformer.Position % 2 == 0 && _nextState != State) {
         State = _nextState;
+
         if (State == GameState.RUNNING) {
           title.SetActive(false);
           player.SetActive(true);
           fork.SetActive(true);
           menuFloor.Stop();
+
+          _activeSummoners.Add(introSummoner);
           introSummoner.Init();
         } else if (State == GameState.OVER) {
-          mainPerformer.Position = 0.0;
+          foreach (var summoner in _activeSummoners) {
+            summoner.Shutdown();
+          }
+          _activeSummoners.Clear();
+
           player.SetActive(false);
+          player.transform.localPosition = _playerOrigin;
+          player.transform.localRotation = Quaternion.identity;
+
           fork.SetActive(false);
-        }
-      }
-      if (State == GameState.OVER) {
-        title.SetActive(mainPerformer.Position % 2 == 0);
-        if (mainPerformer.Position == 2.0) {
           menuFloor.Play();
         }
+      }
+
+      if (State == GameState.OVER) {
+        title.SetActive(mainPerformer.Position % 2 == 0);
       }
     };
   }
 
   void Start() {
-    mainPerformer.Play();
+    Musician.ScheduleTask(delegate() {
+      mainPerformer.Play();
+      menuFloor.Play();
+    }, Musician.Timestamp + 1.0);
     player.SetActive(false);
     fork.SetActive(false);
   }

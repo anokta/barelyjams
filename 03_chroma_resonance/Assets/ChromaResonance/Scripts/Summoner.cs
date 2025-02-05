@@ -30,6 +30,14 @@ public class Summoner : MonoBehaviour {
     floor.Play();
   }
 
+  public void Shutdown() {
+    floor.Stop();
+    automaton.Stop();
+    performer.Stop();
+    performer.Position = 0.0;
+    automaton.transform.localPosition = Vector3.down * automatonHeight;
+  }
+
   private void OnBeat() {
     if (performer.Position == 8.0) {
       floor.Stop();

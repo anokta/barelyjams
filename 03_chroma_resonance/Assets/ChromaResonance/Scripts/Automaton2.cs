@@ -63,6 +63,12 @@ public class Automaton2 : MonoBehaviour {
     SetState(State.FLOATER, floaterProps);
   }
 
+  public void Stop() {
+    floaterProps.instrument.SetAllNotesOff();
+    _performer.Stop();
+    _performer.Position = 0.0;
+  }
+
   void Start() {
     for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
       _performer.Tasks.Add(new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
@@ -142,6 +148,10 @@ public class Automaton2 : MonoBehaviour {
   }
 
   private void UpdateProps() {
+    if (!_performer.IsPlaying) {
+      return;
+    }
+
     UpdateColor("_RimLightColor", _props.rimLightColor, 1.0f);
     UpdateColor("_1st_ShadeColor", _props.shadeColor, 1.0f);
     body.localScale = _props.scale * Vector3.one;
@@ -157,7 +167,7 @@ public class Automaton2 : MonoBehaviour {
     instrument.FilterFrequency = Mathf.Exp(-_playerDistance / _props.lowPassDistance) * 48000.0f;
 
     // Player interaction.
-    bool shouldInteract = _performer.IsPlaying && (_playerDistance < _props.minInteractDistance);
+    bool shouldInteract = (_playerDistance < _props.minInteractDistance);
     if (_state == State.FLOATER) {
       instrument.SetNoteControl(
           _rootPitch, NoteControlType.PITCH_SHIFT,
