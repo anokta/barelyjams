@@ -9,12 +9,32 @@ public class Summoner : MonoBehaviour {
 
   public Performer performer;
 
+  private AudioSource[] _sources = null;
+
+  void Awake() {
+    _sources = GetComponentsInChildren<AudioSource>();
+  }
+
   void OnEnable() {
+    foreach (var source in _sources) {
+      source.mute = false;
+    }
     performer.OnBeat += OnBeat;
+    performer.Position = 0.0;
+    performer.Play();
+    floor.Play();
   }
 
   void OnDisable() {
+    floor.Stop();
     performer.OnBeat -= OnBeat;
+    automaton.Stop();
+    performer.Stop();
+    performer.Position = 0.0;
+    automaton.transform.localPosition = Vector3.down * automatonHeight;
+    foreach (var source in _sources) {
+      source.mute = true;
+    }
   }
 
   void Update() {
@@ -22,20 +42,6 @@ public class Summoner : MonoBehaviour {
       automaton.transform.localPosition =
           Vector3.up * ((float)(0.25f * automatonHeight * performer.Position) - automatonHeight);
     }
-  }
-
-  public void Init() {
-    performer.Position = 0.0;
-    performer.Play();
-    floor.Play();
-  }
-
-  public void Shutdown() {
-    floor.Stop();
-    automaton.Stop();
-    performer.Stop();
-    performer.Position = 0.0;
-    automaton.transform.localPosition = Vector3.down * automatonHeight;
   }
 
   private void OnBeat() {

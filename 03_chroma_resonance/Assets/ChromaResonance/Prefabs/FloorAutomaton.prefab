@@ -152,6 +152,8 @@ MonoBehaviour:
   duration: 1
   lightIntensity: 1000
   lightSpeed: 20
+  instrument: {fileID: 109830105126545184}
+  performer: {fileID: 16223973107739297}
 --- !u!82 &6582890124033518013
 AudioSource:
   m_ObjectHideFlags: 0

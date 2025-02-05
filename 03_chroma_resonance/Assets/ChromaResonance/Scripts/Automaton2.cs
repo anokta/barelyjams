@@ -1,8 +1,13 @@
 using Barely;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Animations;
+
+[System.Serializable]
+public struct Move {
+  public double position;
+  public double duration;
+  public int degree;
+  public Vector3 direction;
+}
 
 // Instead of having separate types of Floater, Follower, and Thumper, this Automaton merges all
 // into a single entity with a lifecycle continuum.
@@ -66,8 +71,34 @@ public class Automaton2 : MonoBehaviour {
     _rigidBody = body.GetComponent<Rigidbody>();
     _props = floaterProps;
     _material = body.GetComponent<Renderer>().material;
-    _performer = GetComponent<Performer>();
     _rootPitch = GameManager.Instance.GetPitch(rootDegree);
+
+    _performer = GetComponent<Performer>();
+    for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
+      _performer.Tasks.Add(new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
+        if (_state == State.THUMPER && !_settingToThumper) {
+          if (state == TaskState.BEGIN) {
+            thumperProps.instrument.SetNoteOn(_rootPitch);
+          } else if (state == TaskState.END) {
+            thumperProps.instrument.SetNoteOff(_rootPitch);
+          }
+        }
+      }));
+    }
+    foreach (var move in followerMoves) {
+      _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
+        if (_state == State.FOLLOWER) {
+          float pitch = GameManager.Instance.GetPitch(move.degree);
+          if (state == TaskState.BEGIN) {
+            _direction = move.direction;
+            followerProps.instrument.SetNoteOn(pitch);
+          } else if (state == TaskState.END) {
+            followerProps.instrument.SetNoteOff(pitch);
+            _direction = Vector3.zero;
+          }
+        }
+      }));
+    }
   }
 
   void OnEnable() {
@@ -119,34 +150,6 @@ public class Automaton2 : MonoBehaviour {
   public void OnTriggerEnter(Collider collider) {
     if (_state == State.FLOATER && !_rigidBody.isKinematic && collider.tag == "Ground") {
       _transformToThumper = true;
-    }
-  }
-
-  void Start() {
-    for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
-      _performer.Tasks.Add(new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
-        if (_state == State.THUMPER && !_settingToThumper) {
-          if (state == TaskState.BEGIN) {
-            thumperProps.instrument.SetNoteOn(_rootPitch);
-          } else if (state == TaskState.END) {
-            thumperProps.instrument.SetNoteOff(_rootPitch);
-          }
-        }
-      }));
-    }
-    foreach (var move in followerMoves) {
-      _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
-        if (_state == State.FOLLOWER) {
-          float pitch = GameManager.Instance.GetPitch(move.degree);
-          if (state == TaskState.BEGIN) {
-            _direction = move.direction;
-            followerProps.instrument.SetNoteOn(pitch);
-          } else if (state == TaskState.END) {
-            followerProps.instrument.SetNoteOff(pitch);
-            _direction = Vector3.zero;
-          }
-        }
-      }));
     }
   }
 
@@ -294,7 +297,7 @@ public class Automaton2 : MonoBehaviour {
     // Hovering noise.
     body.localPosition =
         Vector3.Lerp(body.localPosition,
-                     new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f),
+                     new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.1f, 1.1f),
                                  Random.Range(-1.0f, 1.0f)) *
                          _props.scale,
                      Time.deltaTime * _props.hoveringNoiseSpeed);

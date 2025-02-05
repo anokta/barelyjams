@@ -8,8 +8,6 @@ public class Player : MonoBehaviour {
   public FirstPersonController firstPerson;
   public Transform fork;
 
-  public FollowerAutomaton automaton;
-
   public float clickScale = 0.8f;
   public float hoverScale = 1.2f;
   public float clickScaleSpeed = 1.0f;
