@@ -465,7 +465,7 @@ GameObject:
   - component: {fileID: 383064556}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -718,7 +718,7 @@ MonoBehaviour:
   clickScaleSpeed: 16
   idleNoiseVolume: 0.1
   noiseSpeed: 3
-  maxInteractionDistance: 10
+  maxInteractionDistance: 6
 --- !u!114 &647208482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1836,9 +1836,8 @@ MonoBehaviour:
     duration: 2
     degree: 3
     direction: {x: 0, y: 0, z: -1}
-  floaterMoveSpeed: 0.4
-  followerMoveSpeed: 2
   floaterCorruptSpeed: 8
+  floaterScaleSpeed: 2
   followerCountdownBeats: 32
   thumperAnimation: {fileID: 7400000, guid: 45d3a1d86f4b36d4985644508fb1e73d, type: 2}
   thumperAnimationLerpSpeed: 24
@@ -1852,6 +1851,7 @@ MonoBehaviour:
     hoveringNoiseSpeed: 1
     lowPassDistance: 8
     minInteractDistance: 10
+    moveSpeed: 0.4
   followerProps:
     instrument: {fileID: 1837329470}
     haloColor: {r: 0.70980394, g: 0.41568628, b: 0.41568628, a: 1}
@@ -1861,6 +1861,7 @@ MonoBehaviour:
     hoveringNoiseSpeed: 0.2
     lowPassDistance: 10
     minInteractDistance: 8
+    moveSpeed: 2
   thumperProps:
     instrument: {fileID: 1964439662}
     haloColor: {r: 0.93333334, g: 0.45744827, b: 0.42745093, a: 1}
@@ -1868,8 +1869,9 @@ MonoBehaviour:
     rimLightColor: {r: 1, g: 0, b: 0.81568635, a: 0}
     scale: 0.5
     hoveringNoiseSpeed: 0.1
-    lowPassDistance: 6
+    lowPassDistance: 10
     minInteractDistance: 12
+    moveSpeed: 3
   rootDegree: 0
   scaleSpeed: 1
 --- !u!114 &1502867936 stripped
@@ -2757,7 +2759,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2079309759
 Transform:
   m_ObjectHideFlags: 0
@@ -3532,7 +3534,9 @@ GameObject:
   - component: {fileID: 8784014987684860319}
   - component: {fileID: 8387813717961100321}
   - component: {fileID: 6012286272450665393}
+  - component: {fileID: 8784014987684860321}
   - component: {fileID: 3640793145459296974}
+  - component: {fileID: 8784014987684860320}
   m_Layer: 3
   m_Name: Body
   m_TagString: Automaton
@@ -3555,7 +3559,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -3842,6 +3846,46 @@ Transform:
   - {fileID: 4280475016504279593}
   m_Father: {fileID: 860043507690167024}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &8784014987684860320
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3210708223181480557}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
+--- !u!114 &8784014987684860321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3210708223181480557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f351412436272945916a651b640ebd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  automaton: {fileID: 1284860750}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

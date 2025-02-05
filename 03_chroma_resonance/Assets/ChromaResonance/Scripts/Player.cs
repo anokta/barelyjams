@@ -45,29 +45,25 @@ public class Player : MonoBehaviour {
                    Time.deltaTime * noiseSpeed);
 
     // Fork interaction.
+    Automaton2 automaton = null;
     bool hasAutomatonOnTarget = false;
     Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     if (Physics.Raycast(ray, out var hitInfo, maxInteractionDistance)) {
-      hasAutomatonOnTarget = (hitInfo.collider.tag == "Automaton");
+      if (hitInfo.collider.tag == "Automaton") {
+        automaton = hitInfo.transform.parent.GetComponent<Automaton2>();
+        hasAutomatonOnTarget = automaton != null && automaton.CanInteract();
+      }
     }
 
     bool isHeld = Input.GetMouseButton(0);
     Vector3 scale = (isHeld ? clickScale : (hasAutomatonOnTarget ? hoverScale : 1.0f)) * _idleScale;
 
     if (Input.GetMouseButtonDown(0) && hasAutomatonOnTarget) {
-      // fork.localScale = scale;
-      OnClick(hitInfo.transform.parent.GetComponent<Automaton>());
+      automaton.TransformToThumper();
     }
 
     fork.localRotation =
         Quaternion.AngleAxis((float)GameManager.Instance.Performer.Position * 90.0f, Vector3.one);
     fork.localScale = Vector3.Lerp(fork.localScale, scale, Time.deltaTime * clickScaleSpeed);
-  }
-
-  void OnClick(Automaton automaton) {
-    // Toggle automaton.
-    if (automaton != null) {
-      automaton.Toggle();
-    }
   }
 }
