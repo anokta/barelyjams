@@ -243,11 +243,16 @@ public class Automaton2 : MonoBehaviour {
       if (_state == State.FOLLOWER) {
         transform.position =
             Vector3.Lerp(transform.position, Camera.main.transform.position,
-                         Time.deltaTime * (_props.minInteractDistance /
-                                           (_playerDistance + 0.5f * _props.minInteractDistance)));
+                         0.75f * Time.deltaTime *
+                             (_props.minInteractDistance /
+                              (_playerDistance + 0.5f * _props.minInteractDistance)));
+        followerProps.instrument.SetNoteOn(-1.0f + _rootPitch, 1.0f);
+        followerProps.instrument.SetNoteOn(2.0f + _rootPitch, 0.25f);
       }
     } else {
       instrument.BitCrusherRate = (_state == State.FLOATER) ? 0.5f : 1.0f;
+      followerProps.instrument.SetNoteOff(-1.0f + _rootPitch);
+      followerProps.instrument.SetNoteOff(2.0f + _rootPitch);
     }
 
     if (_state == State.FLOATER) {
@@ -278,10 +283,11 @@ public class Automaton2 : MonoBehaviour {
         haloLight.range = 1.2f * transform.localScale.x * body.localScale.x;
       } else {
         haloLight.range *=
-            1.1f * transform.localScale.x * body.localScale.x;  // should be uniform scale
+            1.15f * transform.localScale.x * body.localScale.x;  // should be uniform scale
       }
     } else {
-      haloLight.range = 1.15f * transform.localScale.x * body.localScale.x;
+      haloLight.range = 1.2f * transform.localScale.x * body.localScale.x +
+                        ((_state == State.FLOATER) ? _followerTransitionProgress * 0.2f : 0.0f);
       haloLight.intensity = 1.0f;
     }
 
