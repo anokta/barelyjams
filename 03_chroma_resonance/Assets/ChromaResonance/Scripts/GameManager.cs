@@ -47,10 +47,10 @@ public class GameManager : MonoBehaviour {
         State = _nextState;
 
         if (State == GameState.RUNNING) {
+          menuFloor.Stop();
           title.SetActive(false);
           player.SetActive(true);
           fork.SetActive(true);
-          menuFloor.Stop();
 
           _activeSummoners.Add(introSummoner);
           introSummoner.Init();

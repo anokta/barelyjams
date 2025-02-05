@@ -1,4 +1,6 @@
 using Barely;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -10,8 +12,15 @@ public class Automaton2 : MonoBehaviour {
 
   public Move[] followerMoves;
 
-  private float floaterMoveSpeed = 0.4f;
-  private float followerMoveSpeed = 2.0f;
+  public float floaterMoveSpeed = 0.4f;
+  public float followerMoveSpeed = 2.0f;
+
+  public float floaterCorruptSpeed = 12.0f;
+  public float floaterScaleSpeed = 2.0f;
+
+  public int followerCountdownBeats = 32;
+  private int _followerCountdownElapsedBeats = 0;
+  private float _followerTransitionProgress = 0.0f;
 
   public AnimationClip thumperAnimation;
   public float thumperAnimationLerpSpeed = 24.0f;
@@ -58,6 +67,14 @@ public class Automaton2 : MonoBehaviour {
     _rootPitch = GameManager.Instance.GetPitch(rootDegree);
   }
 
+  void OnEnable() {
+    GameManager.Instance.Performer.OnBeat += OnBeat;
+  }
+
+  void OnDisable() {
+    GameManager.Instance.Performer.OnBeat -= OnBeat;
+  }
+
   public void Play() {
     _performer.Play();
     SetState(State.FLOATER, floaterProps);
@@ -67,6 +84,19 @@ public class Automaton2 : MonoBehaviour {
     floaterProps.instrument.SetAllNotesOff();
     _performer.Stop();
     _performer.Position = 0.0;
+
+    _followerCountdownElapsedBeats = 0;
+    _followerTransitionProgress = 0.0f;
+
+    _direction = Vector3.zero;
+
+    _state = State.FLOATER;
+    _material.SetColor("_RimLightColor", floaterProps.rimLightColor);
+    _material.SetColor("_1st_ShadeColor", floaterProps.shadeColor);
+    haloLight.color = floaterProps.haloColor;
+    body.localScale = floaterProps.scale * Vector3.one;
+    haloLight.range = 1.15f * transform.localScale.x * body.localScale.x;
+    haloLight.intensity = 1.0f;
   }
 
   void Start() {
@@ -106,6 +136,12 @@ public class Automaton2 : MonoBehaviour {
       SetState(State.THUMPER, thumperProps);
     }
 
+    _followerTransitionProgress =
+        (_state == State.FLOATER)
+            ? Mathf.Lerp(_followerTransitionProgress,
+                         (float)_followerCountdownElapsedBeats / followerCountdownBeats,
+                         Time.deltaTime * floaterCorruptSpeed)
+            : 1.0f;
     _playerDistance = Vector3.Distance(body.transform.position, Camera.main.transform.position);
 
     UpdateProps();
@@ -116,8 +152,11 @@ public class Automaton2 : MonoBehaviour {
     _state = state;
 
     haloLight.color = _props.haloColor;
+    body.localScale = _props.scale * Vector3.one;
 
     if (state == State.FLOATER) {
+      _followerCountdownElapsedBeats = 0;
+      _followerTransitionProgress = 0.0f;
       floaterProps.instrument.SetNoteOn(_rootPitch);
       _direction =
           (_direction + new Vector3(Random.Range(-1.0f, 1.0f), 0.0f, Random.Range(-1.0f, 1.0f)))
@@ -140,21 +179,34 @@ public class Automaton2 : MonoBehaviour {
     }
   }
 
-  private void UpdateColor(string colorName, Color targetColor, float lerpSpeed) {
-    _material.SetColor(colorName, targetColor);
-    // Color currentColor = _material.GetColor(colorName);
-    // _material.SetColor(colorName,
-    //                    Color.Lerp(currentColor, targetColor, Time.deltaTime * lerpSpeed));
-  }
-
   private void UpdateProps() {
     if (!_performer.IsPlaying) {
       return;
     }
 
-    UpdateColor("_RimLightColor", _props.rimLightColor, 1.0f);
-    UpdateColor("_1st_ShadeColor", _props.shadeColor, 1.0f);
-    body.localScale = _props.scale * Vector3.one;
+    Color rimLightColor = (_state == State.FLOATER)
+                              ? Color.Lerp(floaterProps.rimLightColor, followerProps.rimLightColor,
+                                           _followerTransitionProgress)
+                              : _props.rimLightColor;
+    Color shadeColor = (_state == State.FLOATER)
+                           ? Color.Lerp(floaterProps.shadeColor, followerProps.shadeColor,
+                                        _followerTransitionProgress)
+                           : _props.shadeColor;
+    _material.SetColor("_RimLightColor", rimLightColor);
+    _material.SetColor("_1st_ShadeColor", shadeColor);
+
+    haloLight.color = (_state == State.FLOATER)
+                          ? Color.Lerp(floaterProps.haloColor, followerProps.haloColor,
+                                       _followerTransitionProgress)
+                          : _props.haloColor;
+
+    body.localScale = Vector3.Lerp(
+        body.localScale,
+        ((_state == State.FLOATER)
+             ? Mathf.Lerp(floaterProps.scale, followerProps.scale, _followerTransitionProgress)
+             : _props.scale) *
+            Vector3.one,
+        Time.deltaTime * floaterScaleSpeed);
 
     var instrument = _props.instrument;
 
@@ -168,11 +220,7 @@ public class Automaton2 : MonoBehaviour {
 
     // Player interaction.
     bool shouldInteract = (_playerDistance < _props.minInteractDistance);
-    if (_state == State.FLOATER) {
-      instrument.SetNoteControl(
-          _rootPitch, NoteControlType.PITCH_SHIFT,
-          shouldInteract ? (-1.0f + _playerDistance / _props.minInteractDistance) : 0.0f);
-    }
+
     if (shouldInteract) {
       if (_state != State.FLOATER) {
         instrument.BitCrusherRate = Mathf.Pow(_playerDistance / _props.minInteractDistance, 2.0f);
@@ -185,6 +233,16 @@ public class Automaton2 : MonoBehaviour {
       }
     } else {
       instrument.BitCrusherRate = (_state == State.FLOATER) ? 0.5f : 1.0f;
+    }
+
+    if (_state == State.FLOATER) {
+      instrument.SetNoteControl(
+          _rootPitch, NoteControlType.PITCH_SHIFT,
+          shouldInteract ? (-1.0f + _playerDistance / _props.minInteractDistance) : 0.0f);
+
+      instrument.BitCrusherDepth = 8.0f * (1.0f - 0.95f * _followerTransitionProgress);
+      instrument.BitCrusherRate =
+          0.5f * Mathf.Min(Mathf.Pow(1.75f - _followerTransitionProgress, 2.0f), 1.0f);
     }
 
     // Animate the thumper.
@@ -210,9 +268,16 @@ public class Automaton2 : MonoBehaviour {
                      Time.deltaTime * _props.hoveringNoiseSpeed);
   }
 
-  // private void OnBeat() {
-  //   if (GameManager.Instance.Performer.Position == 2.0) {
-  //     _performer.Play();
-  //   }
-  // }
+  private void OnBeat() {
+    if (_state == State.FLOATER) {
+      if (_playerDistance < floaterProps.minInteractDistance) {
+        _followerCountdownElapsedBeats = Mathf.Max(_followerCountdownElapsedBeats - 8, 0);
+      } else {
+        ++_followerCountdownElapsedBeats;
+        if (_followerCountdownElapsedBeats >= followerCountdownBeats) {
+          SetState(State.FOLLOWER, followerProps);
+        }
+      }
+    }
+  }
 }

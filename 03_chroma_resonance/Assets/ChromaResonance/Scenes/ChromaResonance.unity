@@ -1836,6 +1836,10 @@ MonoBehaviour:
     duration: 2
     degree: 3
     direction: {x: 0, y: 0, z: -1}
+  floaterMoveSpeed: 0.4
+  followerMoveSpeed: 2
+  floaterCorruptSpeed: 8
+  followerCountdownBeats: 32
   thumperAnimation: {fileID: 7400000, guid: 45d3a1d86f4b36d4985644508fb1e73d, type: 2}
   thumperAnimationLerpSpeed: 24
   thumpPosition: 0
