@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Summoner : MonoBehaviour {
   public FloorAutomaton floor;
-  public Automaton2 automaton;
+  public Automaton automaton;
 
   public float automatonHeight = 1.0f;
 

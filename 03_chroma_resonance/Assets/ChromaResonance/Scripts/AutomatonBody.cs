@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class AutomatonBody : MonoBehaviour {
-  public Automaton2 automaton;
+  public Automaton automaton;
 
   private void OnTriggerEnter(Collider collider) {
     automaton.OnTriggerEnter(collider);

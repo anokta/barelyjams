@@ -286,7 +286,7 @@ MonoBehaviour:
     moveSpeed: 2
   thumperProps:
     instrument: {fileID: 1761236988733680268}
-    haloColor: {r: 0.93333334, g: 0.45744827, b: 0.42745093, a: 1}
+    haloColor: {r: 0.9005306, g: 0.42745093, b: 0.93333334, a: 1}
     shadeColor: {r: 0.37647063, g: 0.3254902, b: 0.7254902, a: 0}
     rimLightColor: {r: 1, g: 0, b: 0.81568635, a: 0}
     scale: 0.5
@@ -943,7 +943,7 @@ MonoBehaviour:
   - RootPitch: 0
     Sample: {fileID: 8300000, guid: c2241efa7e821ae4ca8d2109286d946f, type: 3}
   FilterType: 1
-  FilterFrequency: 0
+  FilterFrequency: 48000
   BitCrusherDepth: 16
   BitCrusherRate: 1
   OnNoteOffEvent:

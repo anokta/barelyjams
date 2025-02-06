@@ -43,7 +43,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 0, g: 1, b: 0.5503297, a: 1}
-  m_Intensity: 1000
+  m_Intensity: 0
   m_Range: 40
   m_SpotAngle: 30
   m_InnerSpotAngle: 1
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 1012369568197505620}
   hoveringNoiseSpeed: 0
-  lowPassDistance: 10
+  lowPassDistance: 6
   minAttackDistance: 10
   duration: 1
   lightIntensity: 1000

@@ -11,7 +11,7 @@ public struct Move {
 
 // Instead of having separate types of Floater, Follower, and Thumper, this Automaton merges all
 // into a single entity with a lifecycle continuum.
-public class Automaton2 : MonoBehaviour {
+public class Automaton : MonoBehaviour {
   public Transform body;
   private Rigidbody _rigidBody;
 
@@ -148,8 +148,22 @@ public class Automaton2 : MonoBehaviour {
   }
 
   public void OnTriggerEnter(Collider collider) {
-    if (_state == State.FLOATER && !_rigidBody.isKinematic && collider.tag == "Ground") {
+    if (collider.tag != "Ground") {
+      return;
+    }
+    if (_state == State.FLOATER && !_rigidBody.isKinematic) {
       _transformToThumper = true;
+      float detune = Random.Range(-0.01f, 0.01f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 2.0f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 1.0f);
+      followerProps.instrument.SetNoteOff(_rootPitch + detune - 2.0f);
+      followerProps.instrument.SetNoteOff(_rootPitch + detune - 1.0f);
+    } else if (_state == State.THUMPER) {
+      float detune = Random.Range(-0.01f, 0.01f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 3.0f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 2.0f);
+      followerProps.instrument.SetNoteOff(_rootPitch + detune - 3.0f);
+      followerProps.instrument.SetNoteOff(_rootPitch + detune - 2.0f);
     }
   }
 

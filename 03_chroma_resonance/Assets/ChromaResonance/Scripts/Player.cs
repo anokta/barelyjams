@@ -43,12 +43,12 @@ public class Player : MonoBehaviour {
                    Time.deltaTime * noiseSpeed);
 
     // Fork interaction.
-    Automaton2 automaton = null;
+    Automaton automaton = null;
     bool hasAutomatonOnTarget = false;
     Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     if (Physics.Raycast(ray, out var hitInfo, maxInteractionDistance)) {
       if (hitInfo.collider.tag == "Automaton") {
-        automaton = hitInfo.transform.parent.GetComponent<Automaton2>();
+        automaton = hitInfo.transform.parent.GetComponent<Automaton>();
         hasAutomatonOnTarget = automaton != null && automaton.CanInteract();
       }
     }
