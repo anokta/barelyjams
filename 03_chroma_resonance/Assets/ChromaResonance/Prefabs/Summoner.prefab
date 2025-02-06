@@ -293,7 +293,7 @@ MonoBehaviour:
     hoveringNoiseSpeed: 0.1
     lowPassDistance: 10
     minInteractDistance: 12
-    moveSpeed: 3
+    moveSpeed: 4
   rootDegree: 0
   scaleSpeed: 1
 --- !u!1 &4396867344982625035
@@ -479,6 +479,7 @@ GameObject:
   - component: {fileID: 4529470586591841563}
   - component: {fileID: 2485547142118595719}
   - component: {fileID: 1117243591409070110}
+  - component: {fileID: 9074182669159385901}
   m_Layer: 3
   m_Name: Body
   m_TagString: Automaton
@@ -616,6 +617,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!95 &9074182669159385901
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4634247812275730551}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5689309658936286719
 GameObject:
   m_ObjectHideFlags: 0

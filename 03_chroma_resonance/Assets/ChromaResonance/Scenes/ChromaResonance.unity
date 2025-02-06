@@ -361,7 +361,7 @@ MonoBehaviour:
   menuFloor: {fileID: 2108151512}
   title: {fileID: 1518312163}
   summonerPrefab: {fileID: 5689309658936286719, guid: 9bfd444f588312548ad0655945f32c75, type: 3}
-  maxSummonerCount: 50
+  maxSummonerCount: 48
   restartBeatCount: 4
   newSummonBeatCount: 20
   thumperSamples:

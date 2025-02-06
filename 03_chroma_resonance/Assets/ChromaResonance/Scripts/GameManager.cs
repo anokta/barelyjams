@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour {
           _instantiateNewSummoner = true;
         }
         _randomEncounterChance =
-            Mathf.Min(0.1f, _randomEncounterChance + 0.1f / (4.0f * newSummonBeatCount));
+            Mathf.Min(0.075f, _randomEncounterChance + 0.075f / (6.0f * newSummonBeatCount));
       } else {
         _elapsedNewSummonBeatCount = 0;
       }

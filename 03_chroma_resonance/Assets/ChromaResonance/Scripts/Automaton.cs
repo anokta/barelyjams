@@ -67,7 +67,6 @@ public class Automaton : MonoBehaviour {
 
   private Vector3 _direction = Vector3.zero;
 
-  private Task[] _thumperTasks;
   private bool _isThumperPlaying = false;
 
   void Awake() {
@@ -76,21 +75,17 @@ public class Automaton : MonoBehaviour {
     _material = body.GetComponent<Renderer>().material;
 
     _performer = GetComponent<Performer>();
-    _thumperTasks = new Task[2];
-    for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
-      _thumperTasks[i] = new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
-        if (_state == State.THUMPER && !_settingToThumper) {
-          if (GameManager.Instance.State != GameState.OVER && state == TaskState.BEGIN) {
-            thumperProps.instrument.SetNoteOn(_rootPitch);
-            _isThumperPlaying = true;
-          } else if (state == TaskState.END) {
-            thumperProps.instrument.SetNoteOff(_rootPitch);
-            _isThumperPlaying = false;
-          }
+    _performer.Tasks.Add(new Task(thumpPosition, 0.25, delegate(TaskState state) {
+      if (_state == State.THUMPER && !_settingToThumper) {
+        if (GameManager.Instance.State != GameState.OVER && state == TaskState.BEGIN) {
+          thumperProps.instrument.SetNoteOn(_rootPitch);
+          _isThumperPlaying = true;
+        } else if (state == TaskState.END) {
+          thumperProps.instrument.SetNoteOff(_rootPitch);
+          _isThumperPlaying = false;
         }
-      });
-      _performer.Tasks.Add(_thumperTasks[i]);
-    }
+      }
+    }));
     foreach (var move in followerMoves) {
       _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
         if (_state == State.FOLLOWER) {
@@ -128,10 +123,6 @@ public class Automaton : MonoBehaviour {
     }
     return 0.0f;
   }
-
-  // public bool IsThumperPlaying() {
-  //   return _state == State.THUMPER && !_settingToThumper && _isThumperPlaying;
-  // }
 
   public void TransformToThumper() {
     _rigidBody.isKinematic = false;
@@ -257,6 +248,11 @@ public class Automaton : MonoBehaviour {
     } else {
       floaterProps.instrument.SetAllNotesOff();
     }
+
+    if (state == State.THUMPER) {
+      Color.RGBToHSV(_props.shadeColor, out var h, out var s, out var v);
+      _props.shadeColor = Color.HSVToRGB(h, s, v + 0.25f * _rootPitch + Random.Range(-0.5f, 0.25f));
+    }
   }
 
   private void UpdateProps() {
@@ -339,7 +335,9 @@ public class Automaton : MonoBehaviour {
     if (_state == State.THUMPER) {
       _thumperAnimationPosition =
           Mathf.Lerp(_thumperAnimationPosition,
-                     (float)(((_performer.Position - thumpPosition + 4.0) / 4.0) % 1.0),
+                     (float)(((_performer.Position - thumpPosition + _performer.LoopLength) /
+                              _performer.LoopLength) %
+                             1.0),
                      thumperAnimationLerpSpeed * Time.deltaTime);
       Vector3 originalPosition = body.localPosition;
       thumperAnimation.SampleAnimation(body.gameObject, _thumperAnimationPosition);
@@ -369,7 +367,7 @@ public class Automaton : MonoBehaviour {
 
   private void OnBeat() {
     if (_transformToThumper && _state != State.THUMPER) {
-      if (_performer.Position == thumpPosition) {
+      if ((_performer.Position % 4) == thumpPosition) {
         _rigidBody.isKinematic = true;
         _transformToThumper = false;
         _settingToThumper = true;
@@ -388,7 +386,7 @@ public class Automaton : MonoBehaviour {
         }
       }
     } else if (_state == State.THUMPER && _settingToThumper &&
-               (_performer.Position % 4) == thumpPosition) {
+               _performer.Position == thumpPosition) {
       _settingToThumper = false;
       floaterProps.instrument.SetAllNotesOff();
     }
