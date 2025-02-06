@@ -3,6 +3,7 @@ using Barely;
 using BarelyAPI;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public enum GameState {
   RUNNING,
@@ -30,6 +31,14 @@ public class GameManager : MonoBehaviour {
 
   public int restartBeatCount = 4;
   private int _elapsedRestartBeatCount = 0;
+
+  public int newSummonBeatCount = 32;
+  private int _elapsedNewSummonBeatCount = 0;
+  private float _randomEncounterChance = 0.0f;
+
+  public AudioClip[] thumperSamples;
+  private int _thumperSampleIndex = 0;
+  private double _thumperPosition = 0.0;
 
   public Performer Performer {
     get { return mainPerformer; }
@@ -70,6 +79,18 @@ public class GameManager : MonoBehaviour {
     }
 
     mainPerformer.OnBeat += delegate() {
+      if (State == GameState.RUNNING) {
+        if (_elapsedNewSummonBeatCount++ >= newSummonBeatCount ||
+            Random.Range(0.0f, 1.0f) < _randomEncounterChance) {
+          _elapsedNewSummonBeatCount = 0;
+          _instantiateNewSummoner = true;
+        }
+        _randomEncounterChance =
+            Mathf.Min(0.1f, _randomEncounterChance + 0.1f / (4.0f * newSummonBeatCount));
+      } else {
+        _elapsedNewSummonBeatCount = 0;
+      }
+
       if (mainPerformer.Position % 2 == 0) {
         if (State == GameState.DIED && ++_elapsedRestartBeatCount >= restartBeatCount) {
           _nextState = GameState.OVER;
@@ -93,6 +114,8 @@ public class GameManager : MonoBehaviour {
             _summonerPoolIndex = 0;
 
             _markovChain.Reset();
+            _randomEncounterChance = 0.0f;
+            _thumperSampleIndex = 0;
 
             player.SetActive(false);
             player.transform.localPosition = _playerOrigin;
@@ -109,7 +132,8 @@ public class GameManager : MonoBehaviour {
         if (_instantiateNewSummoner) {
           _instantiateNewSummoner = false;
           if (State == GameState.RUNNING) {
-            InstantiateNewSummoner(new Vector3(Random.Range(-20.0f, 20.0f),
+            InstantiateNewSummoner(player.transform.position +
+                                   new Vector3(Random.Range(-20.0f, 20.0f),
                                                summonerPrefab.transform.position.y,
                                                Random.Range(-20.0f, 20.0f)));
           }
@@ -145,9 +169,9 @@ public class GameManager : MonoBehaviour {
       }
     }
 
-    if (State == GameState.RUNNING && Input.GetKeyDown(KeyCode.G)) {
-      _instantiateNewSummoner = true;
-    }
+    // if (State == GameState.RUNNING && Input.GetKeyDown(KeyCode.G)) {
+    //   _instantiateNewSummoner = true;
+    // }
 
     if (Input.GetMouseButtonUp(0)) {
       if (State == GameState.OVER) {
@@ -159,7 +183,6 @@ public class GameManager : MonoBehaviour {
   private void InstantiateNewSummoner(Vector3 position) {
     int summonerIndex = _summonerPoolIndex++;
     if (summonerIndex >= maxSummonerCount) {
-      Debug.LogError("Summoner pool exceeded");
       return;
     }
     var summonerObject = _summonerPool[summonerIndex];
@@ -167,8 +190,15 @@ public class GameManager : MonoBehaviour {
         new Vector3(position.x, summonerPrefab.transform.position.y, position.z);
     var summoner = summonerObject.GetComponent<Summoner>();
     summoner.automaton.rootDegree = _markovChain.CurrentState;
+    // summoner.automaton.thumpPosition = _thumperPosition;
+    summoner.automaton.thumperProps.instrument.Slices[0].Sample =
+        thumperSamples[_thumperSampleIndex];
     summoner.enabled = true;
 
+    _elapsedNewSummonBeatCount = 0;
+
     _markovChain.GenerateNextState();
+    _thumperSampleIndex = Random.Range(0, thumperSamples.Length);
+    _thumperPosition = Random.Range(0, 4);
   }
 }

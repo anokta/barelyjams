@@ -363,6 +363,16 @@ MonoBehaviour:
   summonerPrefab: {fileID: 5689309658936286719, guid: 9bfd444f588312548ad0655945f32c75, type: 3}
   maxSummonerCount: 50
   restartBeatCount: 4
+  newSummonBeatCount: 20
+  thumperSamples:
+  - {fileID: 8300000, guid: deed64026d747bf4db35cad31a2d23be, type: 3}
+  - {fileID: 8300000, guid: e4a710b67456a3f49b8d2b0dcbd99d3d, type: 3}
+  - {fileID: 8300000, guid: 018dba7f7b8325545918acfc6841078e, type: 3}
+  - {fileID: 8300000, guid: 7288784bf4cbf3a4891994ce26485f00, type: 3}
+  - {fileID: 8300000, guid: deed64026d747bf4db35cad31a2d23be, type: 3}
+  - {fileID: 8300000, guid: e4a710b67456a3f49b8d2b0dcbd99d3d, type: 3}
+  - {fileID: 8300000, guid: deed64026d747bf4db35cad31a2d23be, type: 3}
+  - {fileID: 8300000, guid: deed64026d747bf4db35cad31a2d23be, type: 3}
 --- !u!4 &180527399
 Transform:
   m_ObjectHideFlags: 0
@@ -665,7 +675,7 @@ MonoBehaviour:
   survivalBeatCount: 4
   postProcessProfile: {fileID: 11400000, guid: 75309208e631c1c418719b69c799e402, type: 2}
   postProcessingRadius: 4
-  postProcessingSpeed: 4
+  postProcessingSpeed: 5
   idleBloomIntensity: 2.76
   bloomIntensity: 15
   idleGrainIntensity: 0.28

@@ -67,15 +67,17 @@ public class Automaton : MonoBehaviour {
 
   private Vector3 _direction = Vector3.zero;
 
+  private Task[] _thumperTasks;
+
   void Awake() {
     _rigidBody = body.GetComponent<Rigidbody>();
     _props = floaterProps;
     _material = body.GetComponent<Renderer>().material;
-    _rootPitch = GameManager.Instance.GetPitch(rootDegree);
 
     _performer = GetComponent<Performer>();
+    _thumperTasks = new Task[2];
     for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
-      _performer.Tasks.Add(new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
+      _thumperTasks[i] = new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
         if (_state == State.THUMPER && !_settingToThumper) {
           if (GameManager.Instance.State != GameState.OVER && state == TaskState.BEGIN) {
             thumperProps.instrument.SetNoteOn(_rootPitch);
@@ -83,7 +85,8 @@ public class Automaton : MonoBehaviour {
             thumperProps.instrument.SetNoteOff(_rootPitch);
           }
         }
-      }));
+      });
+      _performer.Tasks.Add(_thumperTasks[i]);
     }
     foreach (var move in followerMoves) {
       _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
@@ -133,7 +136,13 @@ public class Automaton : MonoBehaviour {
   }
 
   public void Play() {
+    // _performer.Stop();
+    // TODO: This also can loop infinitely for some reason.
+    // for (int i = 0; i < 2; ++i) {
+    //   _thumperTasks[i].Position = thumpPosition + 4.0 * i;
+    // }
     _performer.Play();
+    _rootPitch = GameManager.Instance.GetPitch(rootDegree);
     SetState(State.FLOATER, floaterProps);
   }
 
@@ -180,13 +189,13 @@ public class Automaton : MonoBehaviour {
   }
 
   void Update() {
-    if (Input.GetKeyDown(KeyCode.Alpha1) && _state != State.FLOATER) {
-      SetState(State.FLOATER, floaterProps);
-    } else if (Input.GetKeyDown(KeyCode.Alpha2) && _state != State.FOLLOWER) {
-      SetState(State.FOLLOWER, followerProps);
-    } else if (Input.GetKeyDown(KeyCode.Alpha3) && _state != State.THUMPER) {
-      SetState(State.THUMPER, thumperProps);
-    }
+    // if (Input.GetKeyDown(KeyCode.Alpha1) && _state != State.FLOATER) {
+    //   SetState(State.FLOATER, floaterProps);
+    // } else if (Input.GetKeyDown(KeyCode.Alpha2) && _state != State.FOLLOWER) {
+    //   SetState(State.FOLLOWER, followerProps);
+    // } else if (Input.GetKeyDown(KeyCode.Alpha3) && _state != State.THUMPER) {
+    //   SetState(State.THUMPER, thumperProps);
+    // }
 
     _followerTransitionProgress =
         (_state == State.FLOATER)
