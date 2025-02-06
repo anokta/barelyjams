@@ -58,6 +58,10 @@ public class GameManager : MonoBehaviour {
 
   private MarkovChain _markovChain;
 
+  public bool IsDead() {
+    return State == GameState.DIED || _nextState == GameState.DIED;
+  }
+
   public void GameOver() {
     _nextState = GameState.DIED;
     _elapsedRestartBeatCount = 0;
@@ -131,7 +135,7 @@ public class GameManager : MonoBehaviour {
 
         if (_instantiateNewSummoner) {
           _instantiateNewSummoner = false;
-          if (State == GameState.RUNNING) {
+          if (State == GameState.RUNNING && _nextState == GameState.RUNNING) {
             InstantiateNewSummoner(player.transform.position +
                                    new Vector3(Random.Range(-20.0f, 20.0f),
                                                summonerPrefab.transform.position.y,

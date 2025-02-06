@@ -69,15 +69,17 @@ public class Player : MonoBehaviour {
 
   void Update() {
     // Postprocessing update.
-    _postProcessingTargetIntensity = 0.0f;
-    if (GameManager.Instance.State != GameState.OVER) {
-      if (Physics.OverlapSphereNonAlloc(Camera.main.transform.position, postProcessingRadius,
-                                        _overlapSphereColliders, interactionLayerMask) > 0) {
-        if (_overlapSphereColliders[0].CompareTag("Automaton")) {
-          var overlappedAutomaton =
-              _overlapSphereColliders[0].transform.parent.GetComponent<Automaton>();
-          if (overlappedAutomaton != null) {
-            _postProcessingTargetIntensity = overlappedAutomaton.GetIntensity();
+    if (!GameManager.Instance.IsDead()) {
+      _postProcessingTargetIntensity = 0.0f;
+      if (GameManager.Instance.State == GameState.RUNNING) {
+        if (Physics.OverlapSphereNonAlloc(Camera.main.transform.position, postProcessingRadius,
+                                          _overlapSphereColliders, interactionLayerMask) > 0) {
+          if (_overlapSphereColliders[0].CompareTag("Automaton")) {
+            var overlappedAutomaton =
+                _overlapSphereColliders[0].transform.parent.GetComponent<Automaton>();
+            if (overlappedAutomaton != null) {
+              _postProcessingTargetIntensity = overlappedAutomaton.GetIntensity();
+            }
           }
         }
       }
@@ -133,4 +135,15 @@ public class Player : MonoBehaviour {
       _elapsedSurvivalBeatCount = 0;
     }
   }
+
+  // private void OnCollisionEnter(Collision collision) {
+  //   Debug.Log(collision.transform.parent.name);
+  //   if (!collision.transform.CompareTag("Automaton")) {
+  //     return;
+  //   }
+  //   var automaton = collision.transform.parent.GetComponent<Automaton>();
+  //   if (automaton.IsThumperPlaying()) {
+  //     GameManager.Instance.GameOver();
+  //   }
+  // }
 }

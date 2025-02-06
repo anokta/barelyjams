@@ -68,6 +68,7 @@ public class Automaton : MonoBehaviour {
   private Vector3 _direction = Vector3.zero;
 
   private Task[] _thumperTasks;
+  private bool _isThumperPlaying = false;
 
   void Awake() {
     _rigidBody = body.GetComponent<Rigidbody>();
@@ -81,8 +82,10 @@ public class Automaton : MonoBehaviour {
         if (_state == State.THUMPER && !_settingToThumper) {
           if (GameManager.Instance.State != GameState.OVER && state == TaskState.BEGIN) {
             thumperProps.instrument.SetNoteOn(_rootPitch);
+            _isThumperPlaying = true;
           } else if (state == TaskState.END) {
             thumperProps.instrument.SetNoteOff(_rootPitch);
+            _isThumperPlaying = false;
           }
         }
       });
@@ -113,16 +116,22 @@ public class Automaton : MonoBehaviour {
   }
 
   public bool CanInteract() {
-    return _performer.IsPlaying && _playerDistance < _props.minInteractDistance &&
-           _state != State.THUMPER;
+    return GameManager.Instance.State == GameState.RUNNING && _performer.IsPlaying &&
+           _playerDistance < _props.minInteractDistance && _state != State.THUMPER;
   }
 
   public float GetIntensity() {
-    if (_state != State.FOLLOWER) {
-      return 0.0f;
+    if (_state == State.THUMPER && !_settingToThumper && _isThumperPlaying) {
+      return thumperProps.minInteractDistance / _playerDistance;
+    } else if (_state == State.FOLLOWER) {
+      return followerProps.minInteractDistance / _playerDistance;
     }
-    return followerProps.minInteractDistance / _playerDistance;
+    return 0.0f;
   }
+
+  // public bool IsThumperPlaying() {
+  //   return _state == State.THUMPER && !_settingToThumper && _isThumperPlaying;
+  // }
 
   public void TransformToThumper() {
     _rigidBody.isKinematic = false;
@@ -136,6 +145,9 @@ public class Automaton : MonoBehaviour {
   }
 
   public void Play() {
+    if (GameManager.Instance.IsDead()) {
+      return;
+    }
     // _performer.Stop();
     // TODO: This also can loop infinitely for some reason.
     // for (int i = 0; i < 2; ++i) {
@@ -155,6 +167,8 @@ public class Automaton : MonoBehaviour {
     _followerCountdownElapsedBeats = 0;
     _followerTransitionProgress = 0.0f;
 
+    _isThumperPlaying = false;
+
     _direction = Vector3.zero;
     _rigidBody.isKinematic = true;
 
@@ -171,6 +185,16 @@ public class Automaton : MonoBehaviour {
   }
 
   public void OnTriggerEnter(Collider collider) {
+    if (collider.CompareTag("Player") && _isThumperPlaying) {
+      float detune = Random.Range(-0.01f, 0.01f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 4.0f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 3.0f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 2.0f);
+      followerProps.instrument.SetAllNotesOff();
+      GameManager.Instance.GameOver();
+      return;
+    }
+
     if (!collider.CompareTag("Ground")) {
       return;
     }
@@ -214,6 +238,8 @@ public class Automaton : MonoBehaviour {
 
     haloLight.color = _props.haloColor;
     body.localScale = _props.scale * Vector3.one;
+
+    _isThumperPlaying = false;
 
     _rigidBody.isKinematic = true;
 
