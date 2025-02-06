@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using Barely;
+using BarelyAPI;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public enum GameState {
   RUNNING,
   OVER,
+  DIED,
 }
 
 public class GameManager : MonoBehaviour {
@@ -26,6 +28,9 @@ public class GameManager : MonoBehaviour {
   private GameObject[] _summonerPool = null;
   private int _summonerPoolIndex = 0;
 
+  public int restartBeatCount = 4;
+  private int _elapsedRestartBeatCount = 0;
+
   public Performer Performer {
     get { return mainPerformer; }
   }
@@ -42,9 +47,17 @@ public class GameManager : MonoBehaviour {
   // private List<Summoner> _activeSummoners;
   private Vector3 _playerOrigin;
 
+  private MarkovChain _markovChain;
+
+  public void GameOver() {
+    _nextState = GameState.DIED;
+    _elapsedRestartBeatCount = 0;
+  }
+
   private void Awake() {
     Instance = this;
 
+    _markovChain = new MarkovChain(8);
     _playerOrigin = player.transform.localPosition;
 
     _summonersParent = new GameObject("Summoners") { hideFlags = HideFlags.DontSave }.transform;
@@ -52,11 +65,16 @@ public class GameManager : MonoBehaviour {
     for (int i = 0; i < maxSummonerCount; ++i) {
       _summonerPool[i] = GameObject.Instantiate(summonerPrefab, _summonersParent);
       _summonerPool[i].name = "Summoner " + (i + 1);
+      _summonerPool[i].transform.position = -1000.0f * Vector3.up;
       _summonerPool[i].GetComponent<Summoner>().enabled = false;
     }
 
     mainPerformer.OnBeat += delegate() {
       if (mainPerformer.Position % 2 == 0) {
+        if (State == GameState.DIED && ++_elapsedRestartBeatCount >= restartBeatCount) {
+          _nextState = GameState.OVER;
+        }
+
         if (_nextState != State) {
           State = _nextState;
 
@@ -69,11 +87,12 @@ public class GameManager : MonoBehaviour {
             InstantiateNewSummoner(Vector3.zero);
           } else if (State == GameState.OVER) {
             for (int i = 0; i < _summonerPoolIndex; ++i) {
-              _summonerPool[i].transform.position =
-                  Vector3.up * summonerPrefab.transform.position.y;
+              _summonerPool[i].transform.position = -1000.0f * Vector3.up;
               _summonerPool[i].GetComponent<Summoner>().enabled = false;
             }
             _summonerPoolIndex = 0;
+
+            _markovChain.Reset();
 
             player.SetActive(false);
             player.transform.localPosition = _playerOrigin;
@@ -81,14 +100,19 @@ public class GameManager : MonoBehaviour {
 
             fork.SetActive(false);
             menuFloor.Play();
+          } else if (State == GameState.DIED) {
+            player.SetActive(false);
+            fork.SetActive(false);
           }
         }
 
         if (_instantiateNewSummoner) {
           _instantiateNewSummoner = false;
-          InstantiateNewSummoner(new Vector3(Random.Range(-20.0f, 20.0f),
-                                             summonerPrefab.transform.position.y,
-                                             Random.Range(-20.0f, 20.0f)));
+          if (State == GameState.RUNNING) {
+            InstantiateNewSummoner(new Vector3(Random.Range(-20.0f, 20.0f),
+                                               summonerPrefab.transform.position.y,
+                                               Random.Range(-20.0f, 20.0f)));
+          }
         }
       }
 
@@ -114,7 +138,7 @@ public class GameManager : MonoBehaviour {
 
   void Update() {
     if (Input.GetKeyDown(KeyCode.Escape)) {
-      if (State != GameState.OVER) {
+      if (State == GameState.RUNNING) {
         _nextState = GameState.OVER;
       } else {
         Application.Quit();
@@ -138,9 +162,13 @@ public class GameManager : MonoBehaviour {
       Debug.LogError("Summoner pool exceeded");
       return;
     }
-    var summoner = _summonerPool[summonerIndex];
-    summoner.transform.position =
+    var summonerObject = _summonerPool[summonerIndex];
+    summonerObject.transform.position =
         new Vector3(position.x, summonerPrefab.transform.position.y, position.z);
-    summoner.GetComponent<Summoner>().enabled = true;
+    var summoner = summonerObject.GetComponent<Summoner>();
+    summoner.automaton.rootDegree = _markovChain.CurrentState;
+    summoner.enabled = true;
+
+    _markovChain.GenerateNextState();
   }
 }

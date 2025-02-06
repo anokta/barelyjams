@@ -282,7 +282,7 @@ MonoBehaviour:
     scale: 0.2
     hoveringNoiseSpeed: 0.2
     lowPassDistance: 8
-    minInteractDistance: 8
+    minInteractDistance: 10
     moveSpeed: 2
   thumperProps:
     instrument: {fileID: 1761236988733680268}

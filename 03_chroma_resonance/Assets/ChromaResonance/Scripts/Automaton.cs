@@ -77,7 +77,7 @@ public class Automaton : MonoBehaviour {
     for (int i = 0; i < 2; ++i) {  // workaround 8 beat loop.
       _performer.Tasks.Add(new Task(thumpPosition + 4.0 * i, 0.25, delegate(TaskState state) {
         if (_state == State.THUMPER && !_settingToThumper) {
-          if (state == TaskState.BEGIN) {
+          if (GameManager.Instance.State != GameState.OVER && state == TaskState.BEGIN) {
             thumperProps.instrument.SetNoteOn(_rootPitch);
           } else if (state == TaskState.END) {
             thumperProps.instrument.SetNoteOff(_rootPitch);
@@ -89,7 +89,7 @@ public class Automaton : MonoBehaviour {
       _performer.Tasks.Add(new Task(move.position, move.duration, delegate(TaskState state) {
         if (_state == State.FOLLOWER) {
           float pitch = GameManager.Instance.GetPitch(move.degree);
-          if (state == TaskState.BEGIN) {
+          if (GameManager.Instance.State != GameState.OVER && state == TaskState.BEGIN) {
             _direction = move.direction;
             followerProps.instrument.SetNoteOn(pitch);
           } else if (state == TaskState.END) {
@@ -111,12 +111,25 @@ public class Automaton : MonoBehaviour {
 
   public bool CanInteract() {
     return _performer.IsPlaying && _playerDistance < _props.minInteractDistance &&
-           _state == State.FLOATER;
+           _state != State.THUMPER;
+  }
+
+  public float GetIntensity() {
+    if (_state != State.FOLLOWER) {
+      return 0.0f;
+    }
+    return followerProps.minInteractDistance / _playerDistance;
   }
 
   public void TransformToThumper() {
     _rigidBody.isKinematic = false;
-    floaterProps.instrument.SetNoteOn(_rootPitch - 1.0f);
+
+    float detune = Random.Range(-0.01f, 0.01f);
+    floaterProps.instrument.SetNoteOn(_rootPitch + detune - 1.0f);
+
+    float interactPitch = _rootPitch + detune + (_state == State.FOLLOWER ? 1.0f : 0.0f);
+    followerProps.instrument.SetNoteOn(interactPitch, 0.75f);
+    followerProps.instrument.SetNoteOff(interactPitch);
   }
 
   public void Play() {
@@ -126,6 +139,7 @@ public class Automaton : MonoBehaviour {
 
   public void Stop() {
     floaterProps.instrument.SetAllNotesOff();
+    followerProps.instrument.SetAllNotesOff();
     _performer.Stop();
     _performer.Position = 0.0;
 
@@ -148,22 +162,20 @@ public class Automaton : MonoBehaviour {
   }
 
   public void OnTriggerEnter(Collider collider) {
-    if (collider.tag != "Ground") {
+    if (!collider.CompareTag("Ground")) {
       return;
     }
-    if (_state == State.FLOATER && !_rigidBody.isKinematic) {
+    if (_state == State.THUMPER) {
+      float detune = Random.Range(-0.01f, 0.01f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 3.0f);
+      followerProps.instrument.SetNoteOn(_rootPitch + detune - 2.0f);
+      followerProps.instrument.SetAllNotesOff();
+    } else if (!_rigidBody.isKinematic) {
       _transformToThumper = true;
       float detune = Random.Range(-0.01f, 0.01f);
       followerProps.instrument.SetNoteOn(_rootPitch + detune - 2.0f);
       followerProps.instrument.SetNoteOn(_rootPitch + detune - 1.0f);
-      followerProps.instrument.SetNoteOff(_rootPitch + detune - 2.0f);
-      followerProps.instrument.SetNoteOff(_rootPitch + detune - 1.0f);
-    } else if (_state == State.THUMPER) {
-      float detune = Random.Range(-0.01f, 0.01f);
-      followerProps.instrument.SetNoteOn(_rootPitch + detune - 3.0f);
-      followerProps.instrument.SetNoteOn(_rootPitch + detune - 2.0f);
-      followerProps.instrument.SetNoteOff(_rootPitch + detune - 3.0f);
-      followerProps.instrument.SetNoteOff(_rootPitch + detune - 2.0f);
+      followerProps.instrument.SetAllNotesOff();
     }
   }
 
@@ -263,8 +275,10 @@ public class Automaton : MonoBehaviour {
                          0.75f * Time.deltaTime *
                              (_props.minInteractDistance /
                               (_playerDistance + 0.5f * _props.minInteractDistance)));
-        followerProps.instrument.SetNoteOn(-1.0f + _rootPitch, 1.0f);
-        followerProps.instrument.SetNoteOn(2.0f + _rootPitch, 0.25f);
+        if (!_settingToThumper && !_transformToThumper) {
+          followerProps.instrument.SetNoteOn(-1.0f + _rootPitch, 1.0f);
+          followerProps.instrument.SetNoteOn(2.0f + _rootPitch, 0.25f);
+        }
       }
     } else {
       instrument.BitCrusherRate = (_state == State.FLOATER) ? 0.5f : 1.0f;
@@ -303,8 +317,9 @@ public class Automaton : MonoBehaviour {
             1.15f * transform.localScale.x * body.localScale.x;  // should be uniform scale
       }
     } else {
-      haloLight.range = 1.2f * transform.localScale.x * body.localScale.x +
-                        ((_state == State.FLOATER) ? _followerTransitionProgress * 0.2f : 0.0f);
+      haloLight.range =
+          1.2f * transform.localScale.x * body.localScale.x +
+          ((_state == State.FLOATER) ? Mathf.Pow(_followerTransitionProgress, 2.0f) * 0.1f : 0.0f);
       haloLight.intensity = 1.0f;
     }
 
@@ -318,17 +333,17 @@ public class Automaton : MonoBehaviour {
   }
 
   private void OnBeat() {
-    if (_state == State.FLOATER) {
-      if (_transformToThumper) {
-        if (_performer.Position == thumpPosition) {
-          _rigidBody.isKinematic = true;
-          _transformToThumper = false;
-          _settingToThumper = true;
-          SetState(State.THUMPER, thumperProps);
-        }
-        return;
+    if (_transformToThumper && _state != State.THUMPER) {
+      if (_performer.Position == thumpPosition) {
+        _rigidBody.isKinematic = true;
+        _transformToThumper = false;
+        _settingToThumper = true;
+        SetState(State.THUMPER, thumperProps);
       }
+      return;
+    }
 
+    if (_state == State.FLOATER) {
       if (_playerDistance < floaterProps.minInteractDistance) {
         _followerCountdownElapsedBeats = Mathf.Max(_followerCountdownElapsedBeats - 8, 0);
       } else {

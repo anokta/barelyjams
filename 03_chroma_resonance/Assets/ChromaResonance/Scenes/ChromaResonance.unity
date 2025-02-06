@@ -362,6 +362,7 @@ MonoBehaviour:
   title: {fileID: 1518312163}
   summonerPrefab: {fileID: 5689309658936286719, guid: 9bfd444f588312548ad0655945f32c75, type: 3}
   maxSummonerCount: 50
+  restartBeatCount: 4
 --- !u!4 &180527399
 Transform:
   m_ObjectHideFlags: 0
@@ -655,9 +656,22 @@ MonoBehaviour:
   clickScale: 0.5
   hoverScale: 2
   clickScaleSpeed: 16
-  idleNoiseVolume: 0.1
+  idleNoiseVolume: 0.15
   noiseSpeed: 3
-  maxInteractionDistance: 6
+  interactionLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  maxInteractionDistance: 8
+  survivalBeatCount: 4
+  postProcessProfile: {fileID: 11400000, guid: 75309208e631c1c418719b69c799e402, type: 2}
+  postProcessingRadius: 4
+  postProcessingSpeed: 4
+  idleBloomIntensity: 2.76
+  bloomIntensity: 15
+  idleGrainIntensity: 0.28
+  grainIntensity: 1
+  idleGrainSize: 1.45
+  grainSize: 2
 --- !u!114 &647208482
 MonoBehaviour:
   m_ObjectHideFlags: 0
