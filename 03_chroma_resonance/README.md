@@ -1,4 +1,4 @@
-![](03_chroma_resonance.png)
+![](03_chroma_resonance.gif)
 
 _from the AI-generated chat..._
 
