@@ -41,6 +41,7 @@ namespace Barely {
   }
 
   /// A representation of a musical instrument that can be played in real-time.
+  [ExecuteInEditMode]
   [RequireComponent(typeof(AudioSource))]
   public class Instrument : MonoBehaviour {
     /// Slice.
@@ -57,6 +58,9 @@ namespace Barely {
         get {
           if (_data == null || HasChanged) {
             _rootPitch = RootPitch;
+            if (Sample != null && Sample.loadState != AudioDataLoadState.Loaded) {
+              return null;  // not ready yet.
+            }
             _sample = Sample;
             if (_sample == null || _sample.samples == 0) {
               _data = null;

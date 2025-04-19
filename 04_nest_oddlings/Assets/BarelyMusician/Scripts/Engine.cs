@@ -239,6 +239,7 @@ namespace Barely {
       /// @param componentHandle Component handle.
       public static void Component_Destroy(Component component, ref IntPtr componentHandle) {
         if (Handle == IntPtr.Zero || componentHandle == IntPtr.Zero) {
+          componentHandle = IntPtr.Zero;
           return;
         }
         bool success = true;
@@ -313,6 +314,11 @@ namespace Barely {
       /// @param instrument Instrument.
       /// @param instrumentHandle Instrument handle.
       public static void Instrument_Create(Instrument instrument, ref IntPtr instrumentHandle) {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) {
+          _isShuttingDown = false;
+        }
+#endif  // UNITY_EDITOR
         if (Handle == IntPtr.Zero || instrumentHandle != IntPtr.Zero) {
           return;
         }
@@ -518,10 +524,10 @@ namespace Barely {
             slices[i] = new Slice() {
               rootPitch = instrumentSlices[i].RootPitch / 12.0f,
               sampleRate =
-                  (instrumentSlices[i].Sample != null) ? instrumentSlices[i].Sample.frequency : 0,
+                  (instrumentSlices[i].Data != null) ? instrumentSlices[i].Sample.frequency : 0,
               samples = instrumentSlices[i].Data,
               sampleCount =
-                  (instrumentSlices[i].Sample != null) ? instrumentSlices[i].Sample.samples : 0,
+                  (instrumentSlices[i].Data != null) ? instrumentSlices[i].Sample.samples : 0,
             };
           }
         }
@@ -1065,7 +1071,9 @@ namespace Barely {
           if (_handle == IntPtr.Zero) {
             var state =
                 new GameObject() { hideFlags = HideFlags.HideAndDontSave }.AddComponent<State>();
-            GameObject.DontDestroyOnLoad(state.gameObject);
+            if (Application.isPlaying) {
+              GameObject.DontDestroyOnLoad(state.gameObject);
+            }
             if (_handle == IntPtr.Zero) {
               GameObject.DestroyImmediate(state.gameObject);
               _isShuttingDown = true;
@@ -1118,6 +1126,7 @@ namespace Barely {
       };
 
       // Component that manages internal state.
+      [ExecuteInEditMode]
       private class State : MonoBehaviour {
         private void Awake() {
           AudioSettings.OnAudioConfigurationChanged += OnAudioConfigurationChanged;
@@ -1135,13 +1144,21 @@ namespace Barely {
 
         private void OnAudioConfigurationChanged(bool deviceWasChanged) {
           Shutdown();
+          var instruments = new List<Instrument>(_instruments.Values);
+          for (int i = 0; i < instruments.Count; ++i) {
+            instruments[i].enabled = false;
+          }
           var performers = new List<Performer>(_performers.Values);
           for (int i = 0; i < performers.Count; ++i) {
             performers[i].enabled = false;
           }
-          var instruments = new List<Instrument>(_instruments.Values);
-          for (int i = 0; i < instruments.Count; ++i) {
-            instruments[i].enabled = false;
+          var arpeggiators = GameObject.FindObjectsByType<Arpeggiator>(FindObjectsSortMode.None);
+          for (int i = 0; i < arpeggiators.Length; ++i) {
+            arpeggiators[i].enabled = false;
+          }
+          var repeaters = GameObject.FindObjectsByType<Repeater>(FindObjectsSortMode.None);
+          for (int i = 0; i < repeaters.Length; ++i) {
+            repeaters[i].enabled = false;
           }
           Initialize();
           for (int i = 0; i < instruments.Count; ++i) {
@@ -1149,6 +1166,12 @@ namespace Barely {
           }
           for (int i = 0; i < performers.Count; ++i) {
             performers[i].enabled = true;
+          }
+          for (int i = 0; i < arpeggiators.Length; ++i) {
+            arpeggiators[i].enabled = true;
+          }
+          for (int i = 0; i < repeaters.Length; ++i) {
+            repeaters[i].enabled = true;
           }
         }
 
