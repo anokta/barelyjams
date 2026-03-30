@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cupbh7rlaicrg"]
+
+[ext_resource type="Script" uid="uid://dahqc4vwh65q6" path="res://scripts/rotato.gd" id="1_airfg"]
+
+[node name="Rotato" type="Node2D" unique_id=1723136510]
+script = ExtResource("1_airfg")
