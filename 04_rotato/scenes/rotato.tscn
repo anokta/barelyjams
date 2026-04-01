@@ -1,6 +1,58 @@
 [gd_scene format=3 uid="uid://cupbh7rlaicrg"]
 
 [ext_resource type="Script" uid="uid://dahqc4vwh65q6" path="res://scripts/rotato.gd" id="1_airfg"]
+[ext_resource type="PackedScene" uid="uid://dxtmy2jfxwk55" path="res://scenes/ball.tscn" id="2_dfy1e"]
+[ext_resource type="PackedScene" uid="uid://or2jcywl6a7q" path="res://scenes/wall.tscn" id="3_qycw7"]
 
 [node name="Rotato" type="Node2D" unique_id=1723136510]
 script = ExtResource("1_airfg")
+
+[node name="Ball" parent="." unique_id=1828446260 instance=ExtResource("2_dfy1e")]
+position = Vector2(496, 596)
+
+[node name="Ball2" parent="." unique_id=2119274481 instance=ExtResource("2_dfy1e")]
+position = Vector2(571, 347)
+
+[node name="Ball7" parent="." unique_id=392170955 instance=ExtResource("2_dfy1e")]
+position = Vector2(735, 469)
+
+[node name="Ball6" parent="." unique_id=1462438880 instance=ExtResource("2_dfy1e")]
+position = Vector2(436, 376)
+
+[node name="Ball3" parent="." unique_id=1304770197 instance=ExtResource("2_dfy1e")]
+position = Vector2(377, 541)
+
+[node name="Ball4" parent="." unique_id=1821748491 instance=ExtResource("2_dfy1e")]
+position = Vector2(401, 420)
+
+[node name="Ball5" parent="." unique_id=52582614 instance=ExtResource("2_dfy1e")]
+position = Vector2(600, 541)
+
+[node name="Wall" parent="." unique_id=1667493768 instance=ExtResource("3_qycw7")]
+position = Vector2(515.00006, 860)
+scale = Vector2(20, 5)
+
+[node name="Wall2" parent="." unique_id=1459521201 instance=ExtResource("3_qycw7")]
+position = Vector2(196.00002, 649)
+rotation = 1.0471976
+scale = Vector2(20, 5)
+
+[node name="Wall3" parent="." unique_id=647892352 instance=ExtResource("3_qycw7")]
+position = Vector2(194, 253.99998)
+rotation = 2.0943952
+scale = Vector2(20, 5)
+
+[node name="Wall5" parent="." unique_id=476448721 instance=ExtResource("3_qycw7")]
+position = Vector2(864, 663)
+rotation = 2.0943952
+scale = Vector2(20, 5)
+
+[node name="Wall6" parent="." unique_id=2113206589 instance=ExtResource("3_qycw7")]
+position = Vector2(865.0001, 267.99997)
+rotation = 4.1887903
+scale = Vector2(20, 5)
+
+[node name="Wall4" parent="." unique_id=1477606060 instance=ExtResource("3_qycw7")]
+position = Vector2(539, 54.000008)
+rotation = 3.1415927
+scale = Vector2(20, 5)
