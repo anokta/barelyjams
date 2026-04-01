@@ -1,7 +1,9 @@
 extends Node2D
 
 func _ready() -> void:
-	pass
+	BarelyEngine.lookahead = 0.0
+	BarelyEngine.reverb_damping = 0.0
+	BarelyEngine.reverb_room_size = 0.8
 
 func _process(delta: float) -> void:
 	pass

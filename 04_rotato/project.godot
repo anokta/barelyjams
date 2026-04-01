@@ -14,6 +14,11 @@ config/name="Rotato"
 run/main_scene="uid://cupbh7rlaicrg"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
+[audio]
+
+driver/output_latency=1
+driver/mix_rate=48000
+
 [display]
 
 window/size/viewport_width=1024

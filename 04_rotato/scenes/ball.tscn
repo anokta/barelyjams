@@ -5,17 +5,17 @@
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7s4qf"]
 friction = 0.0
-bounce = 0.99
+bounce = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n1dj2"]
-radius = 26.076809
+radius = 27.0
 
 [node name="Ball" type="RigidBody2D" unique_id=1828446260]
 mass = 0.2
 physics_material_override = SubResource("PhysicsMaterial_7s4qf")
 continuous_cd = 2
 contact_monitor = true
-max_contacts_reported = 8
+max_contacts_reported = 6
 script = ExtResource("1_cxlvu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1064578083]
@@ -26,13 +26,13 @@ scale = Vector2(0.05, 0.05)
 texture = ExtResource("1_7s4qf")
 
 [node name="BarelyInstrument" type="BarelyInstrument" parent="." unique_id=1178694019]
-attack = 0.01
+attack = 0.001
 release = 1.0
 osc_mix = 0.8
 osc_noise_mix = 0.05
 osc_shape = 0.9
-distortion_mix = 0.05
-distortion_drive = 0.1
+distortion_mix = 0.15
+distortion_drive = 0.25
 filter_cutoff = 0.8
 filter_resonance = 0.4
 filter_tone = -0.5

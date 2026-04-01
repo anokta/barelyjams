@@ -5,7 +5,6 @@ extends RigidBody2D
 var pitch = 0.0
 
 const IMPACT_VELOCITY_SCALE = 0.00001
-const MIN_GAIN = 0.1
 
 var _screenWidth = 0
 
@@ -21,8 +20,6 @@ func _process(delta: float) -> void:
 
 func _on_body_entered(body: Node) -> void:
 	var gain = min(IMPACT_VELOCITY_SCALE * linear_velocity.length_squared(), 1.0)
-	if (gain < MIN_GAIN):
-		return
 	instrument.set_note_on(pitch, gain)
 
 
