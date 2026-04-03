@@ -6,27 +6,8 @@
 
 [node name="Rotato" type="Node2D" unique_id=1723136510]
 script = ExtResource("1_airfg")
-
-[node name="Ball" parent="." unique_id=1828446260 instance=ExtResource("2_dfy1e")]
-position = Vector2(496, 596)
-
-[node name="Ball2" parent="." unique_id=2119274481 instance=ExtResource("2_dfy1e")]
-position = Vector2(571, 347)
-
-[node name="Ball7" parent="." unique_id=392170955 instance=ExtResource("2_dfy1e")]
-position = Vector2(735, 469)
-
-[node name="Ball6" parent="." unique_id=1462438880 instance=ExtResource("2_dfy1e")]
-position = Vector2(436, 376)
-
-[node name="Ball3" parent="." unique_id=1304770197 instance=ExtResource("2_dfy1e")]
-position = Vector2(377, 541)
-
-[node name="Ball4" parent="." unique_id=1821748491 instance=ExtResource("2_dfy1e")]
-position = Vector2(401, 420)
-
-[node name="Ball5" parent="." unique_id=52582614 instance=ExtResource("2_dfy1e")]
-position = Vector2(600, 541)
+ball_scene = ExtResource("2_dfy1e")
+max_ball_init_velocity = Vector2(50, 200)
 
 [node name="Wall" parent="." unique_id=1667493768 instance=ExtResource("3_qycw7")]
 position = Vector2(515.00006, 860)

@@ -2,15 +2,19 @@ extends RigidBody2D
 
 @onready var instrument: BarelyInstrument = $BarelyInstrument
 
+@export var init_pitch_offset = -1.0
+
 var pitch = 0.0
 
-const IMPACT_VELOCITY_SCALE = 0.00001
+const IMPACT_VELOCITY_SCALE = 0.000005
 
 var _screenWidth = 0
 
 func _ready() -> void:
 	pitch = randf()
 	_screenWidth = get_viewport_rect().size.x
+	instrument.set_note_on(pitch + init_pitch_offset)
+	instrument.set_note_off(pitch + init_pitch_offset)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
