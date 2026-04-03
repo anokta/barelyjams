@@ -7,7 +7,7 @@
 [node name="Rotato" type="Node2D" unique_id=1723136510]
 script = ExtResource("1_airfg")
 ball_scene = ExtResource("2_dfy1e")
-max_ball_init_velocity = Vector2(50, 200)
+tempo = 90.0
 
 [node name="Wall" parent="." unique_id=1667493768 instance=ExtResource("3_qycw7")]
 position = Vector2(515.00006, 860)

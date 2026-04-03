@@ -9,33 +9,37 @@ friction = 0.0
 bounce = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n1dj2"]
-radius = 27.0
+radius = 13.0
 
 [sub_resource type="BarelySliceResource" id="BarelySliceResource_4dx81"]
 stream = ExtResource("3_f7cbr")
 
 [node name="Ball" type="RigidBody2D" unique_id=1828446260]
-mass = 0.2
+mass = 0.5
 physics_material_override = SubResource("PhysicsMaterial_7s4qf")
+freeze = true
 continuous_cd = 2
 contact_monitor = true
 max_contacts_reported = 6
 script = ExtResource("1_cxlvu")
+color_modulate_ratio = 0.25
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1064578083]
 shape = SubResource("CircleShape2D_n1dj2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=56942332]
-scale = Vector2(0.05, 0.05)
+texture_filter = 1
+scale = Vector2(0.025, 0.025)
 texture = ExtResource("1_7s4qf")
 
 [node name="BarelyInstrument" type="BarelyInstrument" parent="." unique_id=1178694019]
 gain = 0.75
-attack = 0.0
+attack = 0.2
+decay = 2.0
+sustain = 0.2
 release = 1.0
 slice = SubResource("BarelySliceResource_4dx81")
 osc_mix = 0.24
-osc_mode = 3
 osc_noise_mix = 0.05
 osc_shape = 0.9
 distortion_mix = 0.15
@@ -45,6 +49,10 @@ filter_resonance = 0.4
 filter_tone = -0.25
 reverb_send = 0.4
 voice_count = 16
+
+[node name="BarelyPerformer" type="BarelyPerformer" parent="." unique_id=550743622]
+loop_length = 2.0
+looping = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
