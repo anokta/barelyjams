@@ -9,31 +9,36 @@ script = ExtResource("1_airfg")
 ball_scene = ExtResource("2_dfy1e")
 tempo = 90.0
 
-[node name="Wall" parent="." unique_id=1667493768 instance=ExtResource("3_qycw7")]
+[node name="Level" type="Node2D" parent="." unique_id=1313904405]
+rotation = 6.2831855
+
+[node name="Walls" type="Node2D" parent="Level" unique_id=1489719389]
+
+[node name="Wall" parent="Level/Walls" unique_id=1667493768 instance=ExtResource("3_qycw7")]
 position = Vector2(515.00006, 860)
 scale = Vector2(20, 5)
 
-[node name="Wall2" parent="." unique_id=1459521201 instance=ExtResource("3_qycw7")]
+[node name="Wall2" parent="Level/Walls" unique_id=1459521201 instance=ExtResource("3_qycw7")]
 position = Vector2(196.00002, 649)
 rotation = 1.0471976
 scale = Vector2(20, 5)
 
-[node name="Wall3" parent="." unique_id=647892352 instance=ExtResource("3_qycw7")]
+[node name="Wall3" parent="Level/Walls" unique_id=647892352 instance=ExtResource("3_qycw7")]
 position = Vector2(194, 253.99998)
 rotation = 2.0943952
 scale = Vector2(20, 5)
 
-[node name="Wall5" parent="." unique_id=476448721 instance=ExtResource("3_qycw7")]
+[node name="Wall5" parent="Level/Walls" unique_id=476448721 instance=ExtResource("3_qycw7")]
 position = Vector2(864, 663)
 rotation = 2.0943952
 scale = Vector2(20, 5)
 
-[node name="Wall6" parent="." unique_id=2113206589 instance=ExtResource("3_qycw7")]
+[node name="Wall6" parent="Level/Walls" unique_id=2113206589 instance=ExtResource("3_qycw7")]
 position = Vector2(865.0001, 267.99997)
-rotation = 4.1887903
+rotation = -2.094395
 scale = Vector2(20, 5)
 
-[node name="Wall4" parent="." unique_id=1477606060 instance=ExtResource("3_qycw7")]
+[node name="Wall4" parent="Level/Walls" unique_id=1477606060 instance=ExtResource("3_qycw7")]
 position = Vector2(539, 54.000008)
-rotation = 3.1415927
+rotation = -3.1415925
 scale = Vector2(20, 5)

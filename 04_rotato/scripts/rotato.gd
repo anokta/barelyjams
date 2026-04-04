@@ -1,19 +1,32 @@
 extends Node2D
 
+@onready var level: Node2D = $Level
+
 @export var ball_scene: PackedScene
 @export var max_balls: int = 24
 @export var tempo: float = 60.0
+
+@export var rotationSpeed: float = 0.0
 
 var _balls: Array[Node2D] = []
 var _held_ball: Node2D = null
 
 func _ready() -> void:
 	BarelyEngine.lookahead = 0.0
-	BarelyEngine.reverb_damping = 0.0
+	BarelyEngine.delay_time = 0.125
+	BarelyEngine.delay_feedback = 0.2
+	BarelyEngine.delay_ping_pong = 0.5
+	BarelyEngine.delay_reverb_send = 1.0
+	BarelyEngine.reverb_damping = 0.1
 	BarelyEngine.reverb_room_size = 0.8
+	
+	level.position = get_viewport_rect().size * 0.5
+	for child in level.get_children():
+		child.position -= level.position
 
 func _process(delta: float) -> void:
 	BarelyEngine.tempo = tempo
+	level.rotate(delta * rotationSpeed)
 	pass
 
 func _input(event):

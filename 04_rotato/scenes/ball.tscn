@@ -47,7 +47,8 @@ distortion_drive = 0.25
 filter_cutoff = 0.8
 filter_resonance = 0.4
 filter_tone = -0.25
-reverb_send = 0.4
+delay_send = 0.1
+reverb_send = 0.25
 voice_count = 16
 
 [node name="BarelyPerformer" type="BarelyPerformer" parent="." unique_id=550743622]

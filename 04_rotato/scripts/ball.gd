@@ -17,6 +17,7 @@ extends RigidBody2D
 @export var multiplier_lerp_speed = 16.0
 
 @export var pitch_shift_per_hit = 0.2
+@export var delay_send_per_hit = 0.05
 @export var reverb_send_per_hit = 0.125
 @export var distortion_mix_per_hit = 0.05
 
@@ -72,6 +73,7 @@ func _on_body_entered(body: Node) -> void:
 func _on_body_exited(body: Node) -> void:
 	instrument.set_note_off(pitch)
 	pitch += pitch_shift_per_hit
+	instrument.delay_send += delay_send_per_hit
 	instrument.reverb_send += reverb_send_per_hit
 	instrument.distortion_mix += distortion_mix_per_hit
 		
