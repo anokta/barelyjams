@@ -1,12 +1,19 @@
 extends Node2D
 
-@onready var level: Node2D = $Level
+@export_group("Level")
+@export var wall_scene: PackedScene
+@export var wall_scale : Vector2
+@export var wall_transforms : Array[Vector3]
+@export_group("")
 
 @export var ball_scene: PackedScene
 @export var max_balls: int = 24
 @export var tempo: float = 60.0
 
 @export var rotationSpeed: float = 0.0
+
+var _level: Node2D = null
+var _walls: Array[Node2D] = []
 
 var _balls: Array[Node2D] = []
 var _held_ball: Node2D = null
@@ -20,13 +27,21 @@ func _ready() -> void:
 	BarelyEngine.reverb_damping = 0.1
 	BarelyEngine.reverb_room_size = 0.8
 	
-	level.position = get_viewport_rect().size * 0.5
-	for child in level.get_children():
-		child.position -= level.position
+	var screen_size = get_viewport_rect().size
+	_level = Node2D.new()
+	_level.name = "Level"
+	_level.position = 0.5 * screen_size
+	for wall_transform in wall_transforms:
+		var wall = wall_scene.instantiate()
+		wall.position = screen_size * Vector2(wall_transform.x, wall_transform.y)
+		wall.rotation = deg_to_rad(wall_transform.z)
+		wall.scale = wall_scale
+		_level.add_child(wall)
+	add_child(_level)
 
 func _process(delta: float) -> void:
 	BarelyEngine.tempo = tempo
-	level.rotate(delta * rotationSpeed)
+	_level.rotate(delta * rotationSpeed)
 	pass
 
 func _input(event):
