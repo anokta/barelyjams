@@ -7,10 +7,23 @@ extends RigidBody2D
 
 @export var max_init_velocity_x = 10
 @export var octave_offset = -1.0
-@export var scale_multiplier = 0.75
+
+@export_range(0, 1, 0.01) var stereo_width = 0.8
+
+@export var pitch_multiplier = 1.0
+
+@export var min_scale = 0.1
+@export var scale_multiplier = 0.85
+@export var multiplier_lerp_speed = 16.0
+
+@export var pitch_shift_per_hit = 0.2
+@export var reverb_send_per_hit = 0.125
+@export var distortion_mix_per_hit = 0.05
+
 @export_range(0, 1, 0.01) var color_modulate_ratio = 0.75
 
 var pitch = 0.0
+var multiplier = 0.0
 
 var initial_mass = 0.0
 var initial_scale = Vector2.ZERO
@@ -30,7 +43,7 @@ func _ready() -> void:
 	initial_scale = scale
 	initial_shape_scale = collision_shape.scale
 	
-	pitch = randf() + octave_offset
+	pitch = pitch_multiplier * randf() + octave_offset
 	
 	var color_offset = Color.WHITE * (1.0 - color_modulate_ratio)
 	sprite.modulate = color_offset + color_modulate_ratio * Color.from_hsv(randf(), 1.0, 1.0)
@@ -39,11 +52,15 @@ func _ready() -> void:
 	performer.start()
 
 func _process(delta: float) -> void:
-	instrument.stereo_pan = 2.0 * (position.x / get_viewport_rect().size.x) - 1.0
+	instrument.stereo_pan = stereo_width * (2.0 * (position.x / get_viewport_rect().size.x) - 1.0)
 	if performer.is_playing():
-		instrument.pitch_shift = 0.5 * sin(PI * performer.position)
+		instrument.pitch_shift = 0.5 * pitch_multiplier * sin(PI * performer.position)
 	
-	var multiplier = (1.0 - scale_multiplier * (pitch + instrument.pitch_shift))
+	var new_multiplier = (1.0 - scale_multiplier * (pitch + instrument.pitch_shift))
+	multiplier = lerpf(multiplier, new_multiplier, multiplier_lerp_speed * delta)
+	if multiplier <= min_scale:
+		queue_free()
+		return
 	mass = initial_mass * multiplier
 	scale = initial_scale * multiplier
 	collision_shape.scale = initial_shape_scale * multiplier
@@ -54,3 +71,7 @@ func _on_body_entered(body: Node) -> void:
 
 func _on_body_exited(body: Node) -> void:
 	instrument.set_note_off(pitch)
+	pitch += pitch_shift_per_hit
+	instrument.reverb_send += reverb_send_per_hit
+	instrument.distortion_mix += distortion_mix_per_hit
+		

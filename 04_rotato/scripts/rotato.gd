@@ -30,10 +30,6 @@ func _input(event):
 				_held_ball.activate()
 				_held_ball = null
 
-	#if event is InputEventMouseMotion:
-		#if _held_ball:
-			#_held_ball.position = event.position
-
 func _spawn_ball(position: Vector2):
 	if _balls.size() >= max_balls:
 		var oldest_ball = _balls.pop_front()

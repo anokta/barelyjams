@@ -34,7 +34,7 @@ texture = ExtResource("1_7s4qf")
 
 [node name="BarelyInstrument" type="BarelyInstrument" parent="." unique_id=1178694019]
 gain = 0.75
-attack = 0.2
+attack = 0.15
 decay = 2.0
 sustain = 0.2
 release = 1.0
