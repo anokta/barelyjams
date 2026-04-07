@@ -1,14 +1,16 @@
 [gd_scene format=3 uid="uid://or2jcywl6a7q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uvhfp"]
+size = Vector2(760, 760.7407)
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_uvhfp"]
+size = Vector2(1024, 1024)
 
 [node name="Wall" type="StaticBody2D" unique_id=1667493768]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=350717260]
+scale = Vector2(1.35, 1.35)
 shape = SubResource("RectangleShape2D_uvhfp")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1572636026]
-scale = Vector2(20, 20)
 texture = SubResource("PlaceholderTexture2D_uvhfp")

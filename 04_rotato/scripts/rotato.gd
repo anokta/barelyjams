@@ -1,8 +1,9 @@
 extends Node2D
 
+@export var background_color: Color = Color.BLACK
+
 @export_group("Level")
 @export var wall_scene: PackedScene
-@export var wall_scale : Vector2
 @export var wall_transforms : Array[Vector3]
 @export_group("")
 
@@ -11,6 +12,7 @@ extends Node2D
 @export var tempo: float = 60.0
 
 @export var rotationSpeed: float = 0.0
+@export var wallRotationSpeed: float = 0.0
 
 var _level: Node2D = null
 var _walls: Array[Node2D] = []
@@ -19,6 +21,8 @@ var _balls: Array[Node2D] = []
 var _held_ball: Node2D = null
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(background_color)
+
 	BarelyEngine.lookahead = 0.0
 	BarelyEngine.delay_time = 0.125
 	BarelyEngine.delay_feedback = 0.2
@@ -31,6 +35,7 @@ func _ready() -> void:
 	_level = Node2D.new()
 	_level.name = "Level"
 	_level.position = 0.5 * screen_size
+	var wall_scale = Vector2(1.0 / 2.96, 0.01)
 	for wall_transform in wall_transforms:
 		var wall = wall_scene.instantiate()
 		wall.position = screen_size * Vector2(wall_transform.x, wall_transform.y)
@@ -40,8 +45,11 @@ func _ready() -> void:
 	add_child(_level)
 
 func _process(delta: float) -> void:
+	RenderingServer.set_default_clear_color(background_color)
 	BarelyEngine.tempo = tempo
 	_level.rotate(delta * rotationSpeed)
+	for wall in _level.get_children():
+		wall.rotate(delta * wallRotationSpeed)
 	pass
 
 func _input(event):

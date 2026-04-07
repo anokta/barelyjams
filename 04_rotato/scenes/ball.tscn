@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dxtmy2jfxwk55"]
 
-[ext_resource type="Texture2D" uid="uid://c3gdkid44g8g8" path="res://assets/ball.png" id="1_7s4qf"]
+[ext_resource type="Texture2D" uid="uid://dnfmlrsmhicda" path="res://assets/ball.png" id="1_7s4qf"]
 [ext_resource type="Script" uid="uid://cqoay1q8nucow" path="res://scripts/ball.gd" id="1_cxlvu"]
 [ext_resource type="AudioStream" uid="uid://bbhv1x2wcl3xg" path="res://assets/ball_pluck_c3.wav" id="3_f7cbr"]
 
@@ -9,7 +9,7 @@ friction = 0.0
 bounce = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n1dj2"]
-radius = 13.0
+radius = 14.6
 
 [sub_resource type="BarelySliceResource" id="BarelySliceResource_4dx81"]
 stream = ExtResource("3_f7cbr")
@@ -20,7 +20,7 @@ physics_material_override = SubResource("PhysicsMaterial_7s4qf")
 freeze = true
 continuous_cd = 2
 contact_monitor = true
-max_contacts_reported = 6
+max_contacts_reported = 16
 script = ExtResource("1_cxlvu")
 color_modulate_ratio = 0.25
 
@@ -28,21 +28,18 @@ color_modulate_ratio = 0.25
 shape = SubResource("CircleShape2D_n1dj2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=56942332]
-texture_filter = 1
-scale = Vector2(0.025, 0.025)
+scale = Vector2(0.005, 0.005)
 texture = ExtResource("1_7s4qf")
 
 [node name="BarelyInstrument" type="BarelyInstrument" parent="." unique_id=1178694019]
-gain = 0.75
+gain = 0.8
 attack = 0.15
 decay = 2.0
-sustain = 0.2
+sustain = 0.75
 release = 1.0
 slice = SubResource("BarelySliceResource_4dx81")
-osc_mix = 0.24
+osc_mix = 0.0
 osc_noise_mix = 0.05
-osc_shape = 0.9
-distortion_mix = 0.15
 distortion_drive = 0.25
 filter_cutoff = 0.8
 filter_resonance = 0.4

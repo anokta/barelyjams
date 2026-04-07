@@ -13,6 +13,8 @@ config_version=5
 config/name="Rotato"
 run/main_scene="uid://cupbh7rlaicrg"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+boot_splash/show_image=false
+boot_splash/stretch_mode=0
 
 [audio]
 
@@ -38,3 +40,6 @@ enabled=PackedStringArray("res://addons/barelymusician/plugin.cfg")
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)
+2d/snap/snap_2d_transforms_to_pixel=true
