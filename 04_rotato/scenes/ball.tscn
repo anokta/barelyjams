@@ -24,8 +24,24 @@ max_contacts_reported = 16
 script = ExtResource("1_cxlvu")
 color_modulate_ratio = 0.25
 
+[node name="Label" type="Label" parent="." unique_id=805322962]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.5
+offset_right = 32.5
+offset_bottom = 23.0
+grow_horizontal = 2
+scale = Vector2(0.5, 0.5)
+text = "ROTATO"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1064578083]
 shape = SubResource("CircleShape2D_n1dj2")
+disabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=56942332]
 scale = Vector2(0.005, 0.005)
@@ -51,6 +67,29 @@ voice_count = 16
 [node name="BarelyPerformer" type="BarelyPerformer" parent="." unique_id=550743622]
 loop_length = 2.0
 looping = true
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=417282873]
+emitting = false
+amount = 24
+lifetime = 1.25
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+lifetime_randomness = 0.5
+emission_shape = 6
+emission_ring_inner_radius = 10.0
+emission_ring_radius = 40.0
+direction = Vector2(0, -1)
+spread = 180.0
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angular_velocity_max = 100.0
+radial_accel_min = 20.0
+radial_accel_max = 40.0
+scale_amount_max = 2.0
+color = Color(0.78039217, 0.41960785, 0.2901961, 0.78431374)
+hue_variation_min = 0.25
+hue_variation_max = 0.5
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

@@ -23,9 +23,12 @@ driver/mix_rate=48000
 
 [display]
 
-window/size/viewport_width=1024
-window/size/viewport_height=1024
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/resizable=false
 window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
 
 [editor_plugins]
 

@@ -5,10 +5,21 @@
 [ext_resource type="PackedScene" uid="uid://or2jcywl6a7q" path="res://scenes/wall.tscn" id="3_qycw7"]
 
 [sub_resource type="Environment" id="Environment_qycw7"]
+background_mode = 3
+ambient_light_color = Color(1, 1, 1, 1)
+tonemap_mode = 4
+tonemap_exposure = 2.0
+tonemap_agx_white = 8.0
+tonemap_agx_contrast = 4.0
 glow_enabled = true
-glow_intensity = 2.15
-glow_bloom = 0.4
-glow_hdr_luminance_cap = 32.0
+glow_intensity = 2.0
+glow_bloom = 0.25
+glow_hdr_luminance_cap = 1.0
+adjustment_enabled = true
+adjustment_brightness = 1.2
+adjustment_saturation = 1.5
+
+[sub_resource type="BarelyTaskResource" id="BarelyTaskResource_qycw7"]
 
 [node name="Rotato" type="Node2D" unique_id=1723136510]
 script = ExtResource("1_airfg")
@@ -21,3 +32,7 @@ rotationSpeed = 1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1636307436]
 environment = SubResource("Environment_qycw7")
+
+[node name="BarelyPerformer" type="BarelyPerformer" parent="." unique_id=2055272721]
+looping = true
+tasks = Array[BarelyTaskResource]([SubResource("BarelyTaskResource_qycw7")])
