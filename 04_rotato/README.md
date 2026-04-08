@@ -1,3 +1,5 @@
+![](04_rotato.png)
+
 _from the AI-generated chat..._
 
 **Rotato** is a great name—playful, memorable, and perfectly matches the feel.
