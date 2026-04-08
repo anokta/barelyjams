@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://fm3yw7k5t227"]
+
+[ext_resource type="Script" uid="uid://cx2ediq5nfg22" path="res://addons/barelymusician/demo/instrument_demo.gd" id="1"]
+[ext_resource type="AudioStream" uid="uid://7ue1c0xuhwr" path="res://addons/barelymusician/demo/data/sample.wav" id="2_sv68r"]
+
+[sub_resource type="BarelySliceResource" id="BarelySliceResource_sv68r"]
+stream = ExtResource("2_sv68r")
+
+[sub_resource type="LabelSettings" id="LabelSettings_8q8q8"]
+
+[node name="InstrumentDemo" type="Node" unique_id=854538286]
+script = ExtResource("1")
+
+[node name="Instrument" type="BarelyInstrument" parent="." unique_id=1430736698]
+gain = 0.9
+slice_mode = 1
+slice = SubResource("BarelySliceResource_sv68r")
+osc_shape = 0.2
+delay_send = 0.1
+reverb_send = 0.5
+
+[node name="Label" type="Label" parent="." unique_id=1759105466]
+offset_right = 800.0
+offset_bottom = 600.0
+text = "BarelyMusician Instrument Demo
+
+* Use ASDFFGHJK keys to play the white notes in an octave
+* Use WETYU keys to play the black notes in an octave
+* Use ZX keys to shift octave up and down
+* Use CV keys to adjust note gain up and down
+* Use 123 keys to switch the mode (osc/sample/mix)
+* Use 0 key to toggle arpeggiator on and off"
+label_settings = SubResource("LabelSettings_8q8q8")
+autowrap_mode = 2
